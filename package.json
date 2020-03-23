@@ -1,0 +1,17 @@
+{
+  "name": "whiteboard",
+  "version": "0.0.1",
+  "description": "collaborative whiteboard",
+  "main": "./js/main.js",
+  "repository": "https://gitlab.univ-nantes.fr/uncloud/whiteboard.git",
+  "author": "Matthieu Le Corre <matthieu.lecorre@univ-nantes.fr>",
+  "license": "AGPL-3.0",
+  "scripts": {
+    "build": "NODE_ENV=production webpack --progress --hide-modules --config webpack.prod.js ",
+    "dev": "NODE_ENV=none webpack --progress --config webpack.dev.js ",
+    "watch": "NODE_ENV=none webpack --progress --watch --config webpack.dev.js "
+  },
+  "devDependencies": {
+    "webpack": "^4.42.0"
+  }
+}
