@@ -45,7 +45,7 @@
             function() {
                 \OCP\Util::addscript('whiteboard', 'main');
                 \OCP\Util::addStyle('whiteboard','style') ;
-
+                \OCP\Util::addStyle('whiteboard','literallycanvas') ;
             });
     }
 

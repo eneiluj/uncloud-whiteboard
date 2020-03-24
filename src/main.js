@@ -24,10 +24,21 @@
 */
 whiteboardApp = {
 
-
     // App init
     initialise: function() {
-         this.registerFileActions() ;
+
+        var contenair = "<div id=whiteboard-container></div>" ;
+        
+        this.registerFileActions() ;
+
+
+    },
+
+    setupContainer: function() {
+        $('#content')
+            .add(this.contenair)
+            .addClass("viewer-mode")
+            .addClass("no-sidebar") ;
     },
 
 
@@ -39,11 +50,11 @@ whiteboardApp = {
         OCA.Files.fileActions.registerAction({
             name: 'Edit',
             mime: "application/wbr",
-            actionHandler: self.editAction,
             permissions: OC.PERMISSION_READ,
             icon: function () {
                 return OC.imagePath('core', 'actions/edit');
-            }
+            },
+            actionHandler: self.editAction
         }) ;
         
         OCA.Files.fileActions.setDefault("application/wbr", 'Edit');
@@ -53,13 +64,69 @@ whiteboardApp = {
     //edit
     editAction: function(filename,context) {
         
-        dir = context.dir ;
+        //self.setupContainer() ;
 
-        var ncClient = OC.Files.getClient();
+        var closebtn ="<div id=closebtn class=icon-close><div>" ;
 
-        fo = ncClient.getFileInfo(dir + "/" + filename) ;
+        var contenair = "<div id=whiteboard-container></div>" ;
+        $('#content')
+            .append(contenair)
+            .addClass("viewer-mode")
+            .addClass("no-sidebar") ;
 
-        console.log( fo) ;
+
+        import(/* webpackChunkName: "literallycanvas" */  "literallycanvas").then(LC => {
+
+            var WB= LC.init(
+                document.getElementById('whiteboard-container'),
+                {
+                    imageURLPrefix: '/stable18/apps/whiteboard/img/lc_assets' ,
+                    toolbarPosition: 'top'
+                }                
+            );
+
+            // create close button
+            $('#whiteboard-container') .append(closebtn) ;
+
+            $("#closebtn").click(function(){
+                WB.teardown() ;
+                $('#whiteboard-container').remove() ;
+                $('#content').removeClass("viewer-mode").removeClass("no-sidebard") ;
+            }) ;
+
+            //load whiteboard
+            var url = OC.generateUrl('apps/whiteboard/file/load');
+            $.ajax({
+                type: 'GET',
+                url: url,
+                data: {path: context.dir + "/" + filename }
+            }).done(function(content){
+                console.log("loading done") ;
+                WB.loadSnapshot(JSON.parse(content)) ;
+            })
+            
+            // set save callback
+            WB.on('drawingChange', function() {
+                console.log("Save WB ...") ;
+
+                var url = OC.generateUrl('apps/whiteboard/file/save');
+                console.log(url) ;
+
+                var putObject = {
+                    content: JSON.stringify(WB.getSnapshot()),
+                    path: context.dir + "/" + filename
+                };
+
+                $.ajax({
+                    type: 'POST',
+				    url: url,
+				    data: putObject
+                })
+
+            }) ;
+
+        }) ; 
+
     }
  
 } ;
@@ -104,3 +171,6 @@ $(document).ready(function () {
 
 
 });
+
+__webpack_nonce__ = btoa(OC.requestToken)
+__webpack_public_path__ = OC.linkTo('whiteboard', 'js/');

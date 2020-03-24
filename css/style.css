@@ -1,3 +1,53 @@
+#whiteboard-container {
+    position: absolute;
+    top: 0 ;
+    bottom: 0;
+    left:0 ;
+    right: 0 ;
+    background-color: white;
+    z-index: 1000;
+    margin-top: 50px ;
+    overflow: hidden;
+}
+
+#closebtn {
+    position: absolute;
+    top:0 ;
+    right: 0 ;
+    width: 30px ;
+    height: 30Px ;
+    z-index: inherit;
+}
+
+#closebtn:hover {
+    border: 1px solid silver ;
+    border-radius: 2px ;
+}
+
+
 .icon-whiteboard {
     background-image: url("../img/whiteboard.svg");
+}
+
+.literally {
+    background-color: white !important;
+    position: initial !important ;
+}
+
+.lc-options.horz-toolbar {
+    background-color:  white !important;
+    border-bottom: 1px solid silver !important;
+}
+
+.lc-picker {
+    background-color:  white !important;
+    border-right: 1px solid silver !important;
+}
+
+.square-toolbar-button {
+    border: 0px solid silver ! important;
+}
+
+.square-toolbar-button svg circle{
+    fill: var(--color-primary) ;
 }

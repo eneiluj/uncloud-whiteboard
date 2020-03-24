@@ -13,5 +13,12 @@
   },
   "devDependencies": {
     "webpack": "^4.42.0"
+  },
+  "dependencies": {
+    "create-react-class": "^15.6.3",
+    "literallycanvas": "^0.5.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-dom-factories": "^1.0.2"
   }
 }
