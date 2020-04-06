@@ -1,5 +1,6 @@
+<?php
 /**
- * @author Matthieu Le Corre <matthieu.lecorre@univ-nantes.fr>
+ * @author 2020 Matthieu Le Corre <matthieu.lecorre@univ-nantes.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -18,21 +19,16 @@
  *
  */
 
-const APP_NAME = "whiteboard" ;
-const APP_EXT  = "wbr" ;
-const APP_MIME = "application/wbr" ; //TODO check mime type
+namespace OCA\whiteboard\Collaboration ;
 
-__webpack_nonce__ = btoa(OC.requestToken) ;
-__webpack_public_path__ = OC.linkTo(APP_NAME, 'js/');
+use OCP\User ;
 
-import ApplicationPrototype from './prototype.js' ;
+interface ICollaborationEngine {
 
-OCA.whiteboard = ApplicationPrototype ;
+    public function createSession(string $fileId): int ;
+    public function addUser(User $user): int ;
+    public function removeUser(User $user): int ;
+    public function addStep(string $step): int ;
+    public function getStep(): array ;
 
-$(document).ready(function () {
-
-    OCA.whiteboard.initialise( APP_NAME,APP_EXT, APP_MIME ) ;
-
-});
-
-
+ }

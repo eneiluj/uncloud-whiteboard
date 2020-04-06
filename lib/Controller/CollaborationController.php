@@ -19,17 +19,32 @@
  *
  */
 
- return [
-    'routes' => [
-        [ 'name' => 'file#save',     'url' => '/file/save', 'verb' => 'POST'  ],
-        [ 'name' => 'file#load',     'url' => '/file/load', 'verb' => 'GET'   ],
+namespace OCA\whiteboard\Controller ;
 
-        [ 'name'=> 'collaboration#createSession', 'url' => '/collaboration/createsession','verb' => 'POST'],
-        [ 'name'=> 'collaboration#addStep', 'url' => '/collaboration/addstep','verb' => 'POST'],
-        [ 'name'=> 'collaboration#getStep', 'url' => '/collaboration/getstep','verb' => 'GET'],
-        [ 'name'=> 'collaboration#addUser', 'url' => '/collaboration/adduser','verb' => 'POST'],
-        [ 'name'=> 'collaboration#removeUser', 'url' => '/collaboration/removeuser','verb' => 'POST']
+use OCP\AppFramework\Controller  ;
+use OCP\IRequest;
+use OCP\Files\File;
+use OCP\Files\Folder;
+use OCP\User ;
+use OCA\whiteboard\Collaboration\SimpleFileCollaborationEngine ;
 
-    ]
+class CollaborationController extends Controller {
 
- ];
+    public function __construct($AppName, IRequest $request, Folder $userFolder ) {
+        parent::__construct($AppName, $request);
+
+        $this->id = $request->getParam("id") ;
+    
+        $this->engine = new SimpleFileCollaborationEngine($this->id) ;
+
+    }
+
+    public function createSession($id) {
+        return $this->engine->createSession($id) ;
+    }
+
+    public function addUser($id,$user) {
+        return $this->engine->addUser($user) ;
+    }
+
+}

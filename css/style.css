@@ -10,7 +10,27 @@
     overflow: hidden;
 }
 
-#closebtn {
+.icon-whiteboard {
+    background-image: url("../img/whiteboard.svg");
+}
+
+/*button*/
+#whiteboard-savebtn {
+    position: absolute;
+    top:0 ;
+    right: 30px ;
+    width: 30px ;
+    height: 30Px ;
+    z-index: inherit;
+    background-color: lawngreen;
+}
+
+#whiteboard-savebtn:hover {
+    border: 1px solid silver ;
+    border-radius: 2px ;
+}
+
+#whiteboard-closebtn {
     position: absolute;
     top:0 ;
     right: 0 ;
@@ -19,16 +39,13 @@
     z-index: inherit;
 }
 
-#closebtn:hover {
+#whiteboard-closebtn:hover {
     border: 1px solid silver ;
     border-radius: 2px ;
 }
 
 
-.icon-whiteboard {
-    background-image: url("../img/whiteboard.svg");
-}
-
+/*Editor stuff*/
 .literally {
     background-color: white !important;
     position: initial !important ;

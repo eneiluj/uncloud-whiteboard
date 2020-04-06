@@ -53,7 +53,7 @@ class FileController extends Controller {
 
        /** @var File $file */
        $file = $this->userFolder->get($path);
-       return $file->getContent($content);
+       return $file->getContent();
     }
 
 }
