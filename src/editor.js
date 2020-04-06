@@ -42,7 +42,7 @@ export default {
             this.whiteboard = LC.init(
                     document.getElementById(this.app_name+'-editor'),
                     {
-                        imageURLPrefix: '/stable18/apps/'+this.app_name+'/img/lc_assets' ,
+                        imageURLPrefix: OC.linkTo(this.app_name,'img/lc_assets') ,
                         toolbarPosition: 'top'
                     }                
                 )
