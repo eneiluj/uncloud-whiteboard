@@ -26,25 +26,77 @@ use OCP\IRequest;
 use OCP\Files\File;
 use OCP\Files\Folder;
 use OCP\User ;
+use OCP\ICache ;
+use OCP\ICacheFactory;
 use OCA\whiteboard\Collaboration\SimpleFileCollaborationEngine ;
 
 class CollaborationController extends Controller {
-
-    public function __construct($AppName, IRequest $request, Folder $userFolder ) {
+    /**
+     * @NoAdminRequired
+     * 
+     **/
+    public function __construct($AppName, IRequest $request, Folder $userFolder ,ICacheFactory $cacheFactory ) {
         parent::__construct($AppName, $request);
 
         $this->id = $request->getParam("id") ;
     
-        $this->engine = new SimpleFileCollaborationEngine($this->id) ;
+        $this->engine = new SimpleFileCollaborationEngine($this->id,$cacheFactory) ;
 
     }
 
-    public function createSession($id) {
-        return $this->engine->createSession($id) ;
+    /**
+     * @NoAdminRequired
+     * 
+     **/
+    public function startSession($id) {
+        return $this->engine->startSession($id) ;
     }
 
+    /**
+     * @NoAdminRequired
+     * 
+     **/
     public function addUser($id,$user) {
         return $this->engine->addUser($user) ;
     }
 
+    /**
+     * @NoAdminRequired
+     * 
+     **/
+    public function removeUser($id,$user) {
+        return $this->engine->removeUser($user) ;
+    }
+
+    /**
+     * @NoAdminRequired
+     * 
+     **/
+    public function getUserList($id) {
+        return $this->engine->getUserList() ;
+    }
+
+    /**
+     * @NoAdminRequired
+     * 
+     **/
+    public function addStep($id,$user,$type,$step) {
+        return $this->engine->addStep($user,$type,$step) ;
+    }
+
+    /**
+     * @NoAdminRequired
+     * 
+     **/
+    public function getSteps($id,$from,$handlecheckpoint) {
+        return $this->engine->getSteps($from,$handlecheckpoint) ;
+    }
+
+    /**
+     * @NoAdminRequired
+     * 
+     **/
+    public function pushStep($id) {
+        return $this->engine->waitForNewSteps() ;
+    }
 }

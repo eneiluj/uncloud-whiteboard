@@ -14,7 +14,26 @@
     background-image: url("../img/whiteboard.svg");
 }
 
+.icon-save {
+    background-image: url("../img/save.svg");
+    background-size: 16px;
+}
+
 /*button*/
+#whiteboard-sharebtn {
+    position: absolute;
+    top:0 ;
+    right: 60px ;
+    width: 30px ;
+    height: 30Px ;
+    z-index: inherit;
+}
+
+#whiteboard-sharebtn:hover {
+    border: 1px solid silver ;
+    border-radius: 2px ;
+}
+
 #whiteboard-savebtn {
     position: absolute;
     top:0 ;
@@ -22,7 +41,6 @@
     width: 30px ;
     height: 30Px ;
     z-index: inherit;
-    background-color: lawngreen;
 }
 
 #whiteboard-savebtn:hover {
@@ -45,6 +63,8 @@
 }
 
 
+
+
 /*Editor stuff*/
 .literally {
     background-color: white !important;
@@ -63,8 +83,4 @@
 
 .square-toolbar-button {
     border: 0px solid silver ! important;
-}
-
-.square-toolbar-button svg circle{
-    fill: var(--color-primary) ;
 }

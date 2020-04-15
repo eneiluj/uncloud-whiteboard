@@ -18,37 +18,150 @@
  *
  */
 
- 
+import { emit, subscribe, unsubscribe } from '@nextcloud/event-bus' ;
 /**
 * @namespace collaborationEngine
 */
-collaborationEngine = {
+export default {
 
-    startSession: function(filename) {
-        var url = OC.generateUrl('apps/whiteboard/collaboration/createsession');
-        var id = window.FileList.findFile(filename).id
-        console.log("Create session for id #"+id) ;
-        ajx =  $.ajax({
+    name: 'collaborationEngine',
+
+    start: function(app_name,filename,context) {
+
+        var self = this ;
+
+        this.app_name = app_name  ;
+        this.filename  = filename ;
+        this.context = context ;
+
+        this.SSE_URL = OC.generateUrl('apps/'+this.app_name+'/collaboration/event'); 
+        this.SSE_OPT = {withCredentials:true} ;
+
+        this.init().then(function(data) {
+            console.log("Collaboration started for "+ self.app_name) ;
+            self.addUser() ;
+
+            // because we may arrive in an allready running session
+            // get all steps from last last save 
+            self.getSteps(0,true).then(function(steps){
+                steps.forEach(step => emit(self.app_name+"::externalAddStep",step)) ;
+            })
+            
+            // start pulling for change
+            self.startCommunication() ;
+        });
+        
+    },
+
+    stop: function() {
+        this.removeUser() ;
+    },
+
+    init: function() {
+        var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/startsession');
+        this.id = window.FileList.findFile(this.filename).id
+
+        var ajx =  $.ajax({
             type: 'POST',
             url: url,
-            data: {id: id }
+            data: {id: this.id }
         }) ;    
         return ajx.promise() ;
     },
 
-    addUser: function(filename) {
-        var url = OC.generateUrl('apps/whiteboard/collaboration/adduser');
-        var id = window.FileList.findFile(filename).id
+    addUser: function() {
+        var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/adduser');
         console.log("Adding user " + OC.currentUser ) ;
 
-        ajx = $.ajax({
+        var ajx = $.ajax({
             type: 'POST',
             url: url,
-            data: {id: id,
+            data: {id: this.id,
                    user: OC.currentUser
                   }
         }) ;
         return ajx.promise() ;
+    },
+
+    removeUser: function() {
+        var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/removeuser');
+        console.log("Removing user " + OC.currentUser ) ;
+
+        var ajx = $.ajax({
+            type: 'POST',
+            url: url,
+            data: {id: this.id,
+                   user: OC.currentUser
+                  }
+        }) ;
+        return ajx.promise() ;
+    },
+
+    sendStep: function(payload) {
+
+        var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/addstep');
+
+        var ajx = $.ajax({
+            type: 'POST',
+            contentType: "application/json",
+            dataType: "json",
+            url: url,
+            data: JSON.stringify({id: this.id,
+                   user: OC.currentUser,
+                   type: payload.type,
+                   step: payload.step
+                  })
+        }) ;
+
+        return ajx.promise() ;
+
+    },
+
+    getSteps: function(from,handlecheckpoint) {
+        var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/getsteps');
+        console.log("get initial steps") ;
+        var ajx = $.ajax({
+            type: 'GET',
+            url: url,
+            data: {
+                   id: this.id,
+                   fromStep: from,
+                   handlecheckpoint: handlecheckpoint
+                  }
+        }) ;
+
+        return ajx.promise() ;
+    },
+
+    startCommunication: function() {
+        this.communicationStarted = true ;
+
+        while (this.communicationStarted = true) {
+            this.longPull().done( function(data){
+                console.log(data) ;
+            })
+        }
+
+    },
+
+    longPull: function() {
+        var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/pushstep');
+        console.log("Starting polling ...") ;
+        var ajx = $.ajax({
+            type: 'GET',
+            url: url,
+            data: {
+                   id: this.id,
+                  }
+        }) ;
+
+        return ajx.promise() ;
+
+    },
+
+    stopCommunication: function(){
+       this.communicationStarted = false ;
+        // this.source.close() ;
     }
 
 }

@@ -20,7 +20,7 @@
 
 const APP_NAME = "whiteboard" ;
 const APP_EXT  = "wbr" ;
-const APP_MIME = "application/wbr" ; //TODO check mime type
+const APP_MIME = "application/wbr" ;
 
 __webpack_nonce__ = btoa(OC.requestToken) ;
 __webpack_public_path__ = OC.linkTo(APP_NAME, 'js/');
@@ -34,5 +34,3 @@ $(document).ready(function () {
     OCA.whiteboard.initialise( APP_NAME,APP_EXT, APP_MIME ) ;
 
 });
-
-

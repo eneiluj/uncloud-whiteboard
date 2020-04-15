@@ -24,11 +24,16 @@
         [ 'name' => 'file#save',     'url' => '/file/save', 'verb' => 'POST'  ],
         [ 'name' => 'file#load',     'url' => '/file/load', 'verb' => 'GET'   ],
 
-        [ 'name'=> 'collaboration#createSession', 'url' => '/collaboration/createsession','verb' => 'POST'],
+        [ 'name'=> 'collaboration#startSession', 'url' => '/collaboration/startsession','verb' => 'POST'],
+
         [ 'name'=> 'collaboration#addStep', 'url' => '/collaboration/addstep','verb' => 'POST'],
-        [ 'name'=> 'collaboration#getStep', 'url' => '/collaboration/getstep','verb' => 'GET'],
+        [ 'name'=> 'collaboration#getSteps', 'url' => '/collaboration/getsteps','verb' => 'GET'],
+
         [ 'name'=> 'collaboration#addUser', 'url' => '/collaboration/adduser','verb' => 'POST'],
-        [ 'name'=> 'collaboration#removeUser', 'url' => '/collaboration/removeuser','verb' => 'POST']
+        [ 'name'=> 'collaboration#removeUser', 'url' => '/collaboration/removeuser','verb' => 'POST'],
+        [ 'name'=> 'collaboration#getUserList', 'url' => '/collaboration/getuserlist','verb' => 'GET'],
+
+        [ 'name'=> 'collaboration#pushStep', 'url'=> '/collaboration/pushstep', 'verb' => 'GET']
 
     ]
 

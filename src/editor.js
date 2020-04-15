@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+import { emit, subscribe, unsubscribe } from '@nextcloud/event-bus'
 
 export default { 
     name: "editor",
@@ -31,14 +32,14 @@ export default {
 
         this.init().then(function(){
                 self.loadContent()   ;
-                self.setupCallback() ;
-
+                self.setupCallbacks() ;
         }) ;
 
     },
     
     init: function () {
         return import(/* webpackChunkName: "literallycanvas" */  "literallycanvas").then(LC => {
+            this.LC = LC ;
             this.whiteboard = LC.init(
                     document.getElementById(this.app_name+'-editor'),
                     {
@@ -67,6 +68,9 @@ export default {
 
     //save whiteboard
     saveContent: function() {
+
+        var self = this ;
+        
         var url = OC.generateUrl('apps/'+this.app_name+'/file/save');
 
         var postObject = {
@@ -79,50 +83,53 @@ export default {
             url: url,
             data: postObject
         }).done(function(content){
-            console.log("Save whiteboard ...") ;
+            console.log("Whiteboard Saved") ;
+            var payload = {
+                'type' : 'save',
+                'step' : 'NA'
+            } ;
+            emit(self.app_name+"::editorAddStep",payload) ;
         })
+
     },
 
     //setup callback
-    setupCallback: function (){
+    setupCallbacks: function (){
             var self = this ;
 
             // set save callback
-            this.whiteboard.on('drawingChange', function() {
-                self.saveContent() ;        
+            //this.whiteboard.on('drawingChange', function(data) {
+
+                //emit(self.app_name+"::editorContentChange",data) ,
+
+                //self.saveContent() ;        
+            //});
+
+            this.whiteboard.on('shapeSave', function(data) {
+                var payload = {
+                    'type' : 'shapeSave',
+                    'step' : self.LC.shapeToJSON(data.shape)
+                } ;
+                emit(self.app_name+"::editorAddStep",payload) ;
+                console.log("ED: Creating NewShape ") ;
+                return data ;
             });
+
     },
 
     //destroy editor 
-    close: function() {
+    stop: function() {
         this.whiteboard.teardown() ;
-    }
+    },
+
+    applyChange: function(step) {
+        switch (step.type) {
+            case 'shapeSave':
+                    this.whiteboard.saveShape(this.LC.JSONToShape(step.data),false) ;
+                break ;
+            default: console.warn("unknown step type")
+        }
+        
+    },
+
 }
-
-
-/*if (CONF_MASTER == true) {
-                $('#closebtn').addClass("master") ;
-            } else {
-                setInterval(() => {
-                    //load whiteboard
-                    var url = OC.generateUrl('apps/whiteboard/file/load');
-                    $.ajax({
-                        type: 'GET',
-                        url: url,
-                        data: {path: context.dir + "/" + filename }
-                    }).done(function(content){
-                        console.log("update WB ...") ;
-                        WB.loadSnapshot(JSON.parse(content)) ;
-                    })
-                }, 300);
-            }*/
-
-            /*require("./collaboration.js") ;
-
-            collaborationEngine.startSession(filename)
-                .done(function(){
-                    console.log("session started")
-                    collaborationEngine.addUser(filename) ;
-                }) ;
-
-            */

@@ -19,16 +19,21 @@
  *
  */
 
+ use OCP\EventDispatcher\Event;
+
 namespace OCA\whiteboard\Collaboration ;
 
-use OCP\User ;
+class stepEvent extends Event {
 
-interface ICollaborationEngine {
+    private $step ;
 
-    public function createSession(string $fileId): int ;
-    public function addUser(User $user): int ;
-    public function removeUser(User $user): int ;
-    public function addStep(User $user, string $type,string $step): int ;
-    public function getStep(): array ;
+    public function __construct(Array $step) {
+        parent::__construct() ;
 
- }
+        $this->step = $step ;
+    }
+
+    public function getStep(): Array {
+        return $this->step ;
+    }
+}
