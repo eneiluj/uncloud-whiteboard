@@ -1,3 +1,5 @@
+/* eslint-env jquery */
+
 /**
  * @author Matthieu Le Corre <matthieu.lecorre@univ-nantes.fr>
  *
@@ -19,6 +21,10 @@
  */
 
 import { emit } from '@nextcloud/event-bus'
+import { generateUrl } from '@nextcloud/router'
+import { getCurrentUser } from '@nextcloud/auth'
+import axios from '@nextcloud/axios'
+
 /**
 * @namespace collaborationEngine
 */
@@ -34,22 +40,22 @@ export default {
 		this.filename = filename
 		this.context = context
 
-		this.SSE_URL = OC.generateUrl('apps/' + this.appName + '/collaboration/event')
+		this.SSE_URL = generateUrl('apps/' + this.appName + '/collaboration/event')
 		this.SSE_OPT = { withCredentials: true }
 
 		this.init().then(function(data) {
-			console.log('CE : Collaboration started for ' + self.appName)
+			// console.log('CE : Collaboration started for ' + self.appName)
 			self.addUser()
 
 			// because we may arrive in an allready running session
 			// get all steps from last last save
 			self.getSteps().then(function(steps) {
-				steps.forEach(step => emit(self.appName + '::externalAddStep', step))
+				steps.data.forEach(step => emit(self.appName + '::externalAddStep', step))
 			})
 
 			// start pulling for change
 			self.communicationStarted = true
-			console.log('CE : starting communication ')
+			// console.log('CE : starting communication ')
 			self.startCommunication()
 		})
 
@@ -58,110 +64,98 @@ export default {
 	stop: function() {
 		this.removeUser()
 		this.stopCommunication()
-		console.log('CE : Collaboration stopped for ' + this.appName)
+		// console.log('CE : Collaboration stopped for ' + this.appName)
 	},
 
 	init: function() {
-		const url = OC.generateUrl('apps/' + this.appName + '/collaboration/startsession')
+		const url = generateUrl('apps/' + this.appName + '/collaboration/startsession')
 		this.id = window.FileList.findFile(this.filename).id
 
-		const ajx = $.ajax({
-			type: 'POST',
-			url: url,
-			data: { id: this.id },
+		const ajx = axios.post(url, {
+			id: this.id,
 		})
-		return ajx.promise()
+
+		return ajx
 	},
 
 	addUser: function() {
-		const url = OC.generateUrl('apps/' + this.appName + '/collaboration/adduser')
-		console.log('CE : Adding user ' + OC.currentUser)
+		const url = generateUrl('apps/' + this.appName + '/collaboration/adduser')
+		// console.log('CE : Adding user ' + OC.currentUser)
 
-		const ajx = $.ajax({
-			type: 'POST',
-			url: url,
-			data: { id: this.id,
-				user: OC.currentUser,
-			},
+		const ajx = axios.post(url, {
+			id: this.id,
+			user: getCurrentUser().uid,
 		})
-		return ajx.promise()
+
+		return ajx
 	},
 
 	removeUser: function() {
-		const url = OC.generateUrl('apps/' + this.appName + '/collaboration/removeuser')
-		console.log('CE : Removing user ' + OC.currentUser)
+		const url = generateUrl('apps/' + this.appName + '/collaboration/removeuser')
+		// console.log('CE : Removing user ' + OC.currentUser)
 
-		const ajx = $.ajax({
-			type: 'POST',
-			url: url,
-			data: { id: this.id,
-				user: OC.currentUser,
-			},
+		const ajx = axios.post(url, {
+			id: this.id,
+			user: getCurrentUser().uid,
 		})
-		return ajx.promise()
+
+		return ajx
 	},
 
 	sendStep: function(payload) {
 
-		const url = OC.generateUrl('apps/' + this.appName + '/collaboration/addstep')
-		console.log('CE : Sending ', payload.type, ' step')
-		const ajx = $.ajax({
-			type: 'POST',
-			url: url,
-			data: { id: this.id,
-				user: OC.currentUser,
-				type: payload.type,
-				step: JSON.stringify(payload.step),
-			},
+		const url = generateUrl('apps/' + this.appName + '/collaboration/addstep')
+		// console.log('CE : Sending ', payload.type, ' step')
+		const ajx = axios.post(url, {
+			id: this.id,
+			user: getCurrentUser().uid,
+			type: payload.type,
+			step: JSON.stringify(payload.step),
 		})
 
-		return ajx.promise()
+		return ajx
 
 	},
 
 	getSteps: function() {
-		const url = OC.generateUrl('apps/' + this.appName + '/collaboration/getsteps')
-		console.log('CE : Getting initial steps')
-		const ajx = $.ajax({
-			type: 'GET',
-			url: url,
-			data: {
+		const url = generateUrl('apps/' + this.appName + '/collaboration/getsteps')
+		// console.log('CE : Getting initial steps')
+		const ajx = axios.get(url, {
+			params: {
 				id: this.id,
 			},
 		})
 
-		return ajx.promise()
+		return ajx
 	},
 
 	startCommunication: function() {
 		const self = this
 
-		this.longPull().done(function(steps) {
-			steps.forEach(function(step) {
-				if (step.userId != OC.currentUser) {
+		this.longPull().then(function(reponse) {
+			reponse.data.forEach(function(step) {
+				if (step.userId !== getCurrentUser().uid) {
 					emit(self.appName + '::externalAddStep', step)
-					console.log('CE : A step for me !')
+					// console.log('CE : A step for me !')
 				}
 			})
-			if (self.communicationStarted == true) {
+			if (self.communicationStarted === true) {
 				self.startCommunication()
 			}
 		})
 	},
 
 	longPull: function() {
-		const url = OC.generateUrl('apps/' + this.appName + '/collaboration/pushstep')
-		console.log('CE : Poll again ...')
-		const ajx = $.ajax({
-			type: 'GET',
-			url: url,
-			data: {
+		const url = generateUrl('apps/' + this.appName + '/collaboration/pushstep')
+		// console.log('CE : Poll again ...')
+		const ajx = axios.get(url, {
+			params: {
 				id: this.id,
-				user: OC.currentUser,
+				user: getCurrentUser().uid,
 			},
 		})
 
-		return ajx.promise()
+		return ajx
 
 	},
 

@@ -24,12 +24,12 @@ const APP_NAME = 'whiteboard'
 const APP_EXT = 'wbr'
 const APP_MIME = 'application/wbr'
 
-__webpack_nonce__ = btoa(OC.requestToken)
-__webpack_public_path__ = OC.linkTo(APP_NAME, 'js/')
+__webpack_nonce__ = btoa(OC.requestToken) 			 // eslint-disable-line
+__webpack_public_path__ = OC.linkTo(APP_NAME, 'js/') // eslint-disable-line
 
 OCA.whiteboard = ApplicationPrototype
 
-$(document).ready(function() {
+document.addEventListener('DOMContentLoaded', () => {
 
 	OCA.whiteboard.initialise(APP_NAME, APP_EXT, APP_MIME)
 

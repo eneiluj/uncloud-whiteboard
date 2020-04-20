@@ -1,3 +1,5 @@
+/* eslint-env jquery */
+
 /**
  * @author Matthieu Le Corre <matthieu.lecorre@univ-nantes.fr>
  *
@@ -20,7 +22,11 @@
 
 import editor from './editor.js'
 import collaborationEngine from './collaboration.js'
-import { emit, subscribe, unsubscribe } from '@nextcloud/event-bus'
+import { subscribe, unsubscribe } from '@nextcloud/event-bus'
+import { imagePath } from '@nextcloud/router'
+
+// import Vue from 'vue'
+// import prototypeView from './prototypeView'
 
 /**
 * @namespace ApplicationPrototype
@@ -50,8 +56,24 @@ export default {
 	setupContainer: function(filename, context) {
 
 		const self = this
+		/*
+		const container = document.createElement('div')
+		container.id = this.APP_NAME + '-container'
+		document.body.appendChild(container)
 
-		$('#content')
+		Vue.prototype.t = window.t
+		Vue.prototype.n = window.n
+		Vue.prototype.OCA = window.OCA
+
+		const vm = new Vue({
+			el: '#whiteboard-container',
+			render: h => h(prototypeView),
+		})
+
+		vm.$mount(container)
+		*/
+
+		 $('#content')
 			.append(this.container)
 			.addClass('viewer-mode')
 			.addClass('no-sidebar')
@@ -89,7 +111,7 @@ export default {
 			mime: this.APP_MIME,
 			permissions: OC.PERMISSION_READ,
 			icon: function() {
-				return OC.imagePath('core', 'actions/edit')
+				return imagePath('core', 'actions/edit')
 			},
 			actionHandler: function(filename, context) {
 				self.setupContainer(filename, context)
@@ -106,7 +128,7 @@ export default {
 
 		attach: function(menu) {
 
-			const self = this
+			// const self = this
 
 			const fileList = menu.fileList
 			if (fileList.id !== 'files') {
@@ -120,10 +142,10 @@ export default {
 				iconClass: 'icon-' + this.APP_NAME,
 				fileType: this.APP_MIME,
 				actionHandler: function(fileName) {
-					const dir = fileList.getCurrentDirectory()
+					// const dir = fileList.getCurrentDirectory()
 					fileList.createFile(fileName)
 						.then(function() {
-							console.log('New ' + self.APP_NAME)
+							// console.log('New ' + self.APP_NAME)
 						})
 				},
 			})
@@ -174,8 +196,9 @@ export default {
 		this.ED.stop()
 
 		// remove app container
-		$('#' + this.APP_NAME + '-container').remove()
-		$('#content').removeClass('viewer-mode').removeClass('no-sidebard')
+		// TODO handle Vue destroying
+		$('#' + this.APP_NAME + '-container').remove() // eslint-disable-line
+		$('#content').removeClass('viewer-mode').removeClass('no-sidebard') // eslint-disable-line
 	},
 
 	// save edit

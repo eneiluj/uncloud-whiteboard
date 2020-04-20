@@ -1,3 +1,5 @@
+/* eslint-env jquery */
+
 /**
  * @author Matthieu Le Corre <matthieu.lecorre@univ-nantes.fr>
  *
@@ -17,16 +19,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import { emit, subscribe, unsubscribe } from '@nextcloud/event-bus'
+import { emit } from '@nextcloud/event-bus'
+import { linkTo, generateUrl } from '@nextcloud/router'
+import axios from '@nextcloud/axios'
 
 export default {
 	name: 'editor',
 
-	start: function(app_name, filename, context) {
+	start: function(appName, filename, context) {
 
 		const self = this
 
-		this.app_name = app_name
+		this.appname = appName
 		this.filename = filename
 		this.context = context
 
@@ -41,9 +45,9 @@ export default {
 		return import(/* webpackChunkName: "literallycanvas" */ 'literallycanvas').then(LC => {
 			this.LC = LC
 			this.whiteboard = LC.init(
-				document.getElementById(this.app_name + '-editor'),
+				document.getElementById(this.appname + '-editor'),
 				{
-					imageURLPrefix: OC.linkTo(this.app_name, 'img/lc_assets'),
+					imageURLPrefix: linkTo(this.appname, 'img/lc_assets'),
 					toolbarPosition: 'top',
 				}
 			)
@@ -54,16 +58,16 @@ export default {
 	loadContent: function() {
 
 		const self = this
-		const url = OC.generateUrl('apps/' + this.app_name + '/file/load')
+		const url = generateUrl('apps/' + this.appname + '/file/load')
 
-		$.ajax({
-			type: 'GET',
-			url: url,
-			data: { path: this.context.dir + '/' + this.filename },
-		}).done(function(content) {
+		axios.get(url, {
+			params: {
+				path: this.context.dir + '/' + this.filename,
+			},
+		}).then(function(content) {
 			// console.log("WB : loaded") ;
-			if (content.trim() != '') {
-				self.whiteboard.loadSnapshot(JSON.parse(content))
+			if (content.data.trim() !== '') {
+				self.whiteboard.loadSnapshot(JSON.parse(content.data))
 			}
 		})
 	},
@@ -73,24 +77,20 @@ export default {
 
 		const self = this
 
-		const url = OC.generateUrl('apps/' + this.app_name + '/file/save')
+		const url = generateUrl('apps/' + this.appname + '/file/save')
 
-		const postObject = {
-			content: JSON.stringify(this.whiteboard.getSnapshot()),
-			path: this.context.dir + '/' + this.filename,
-		}
-
-		$.ajax({
-			type: 'POST',
-			url: url,
-			data: postObject,
-		}).done(function(content) {
+		axios.post(url, {
+			param: {
+				content: JSON.stringify(this.whiteboard.getSnapshot()),
+				path: this.context.dir + '/' + this.filename,
+			},
+		}).then(function(content) {
 			OC.Notification.showTemporary('File saved')
 			const payload = {
 				'type': 'save',
 				'step': 'NA',
 			}
-			emit(self.app_name + '::editorAddStep', payload)
+			emit(self.appname + '::editorAddStep', payload)
 		})
 
 	},
@@ -112,8 +112,8 @@ export default {
 				'type': 'shapeSave',
 				'step': self.LC.shapeToJSON(data.shape),
 			}
-			emit(self.app_name + '::editorAddStep', payload)
-			console.log('ED: Creating NewShape ')
+			emit(self.appname + '::editorAddStep', payload)
+			// console.log('ED: Creating NewShape ')
 			return data
 		})
 
@@ -127,7 +127,7 @@ export default {
 	applyChange: function(step) {
 		switch (step.stepType) {
 		case 'shapeSave':
-			var shapeStep = this.LC.JSONToShape(JSON.parse(step.stepData))
+			const shapeStep = this.LC.JSONToShape(JSON.parse(step.stepData)) // eslint-disable-line
 			this.whiteboard.saveShape(shapeStep, false)
 			break
 		default: console.warn('unknown step type')
