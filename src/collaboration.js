@@ -18,156 +18,156 @@
  *
  */
 
-import { emit, subscribe, unsubscribe } from '@nextcloud/event-bus' ;
+import { emit } from '@nextcloud/event-bus'
 /**
 * @namespace collaborationEngine
 */
 export default {
 
-    name: 'collaborationEngine',
+	name: 'collaborationEngine',
 
-    start: function(app_name,filename,context) {
+	start: function(appName, filename, context) {
 
-        var self = this ;
+		const self = this
 
-        this.app_name = app_name  ;
-        this.filename  = filename ;
-        this.context = context ;
+		this.appName = appName
+		this.filename = filename
+		this.context = context
 
-        this.SSE_URL = OC.generateUrl('apps/'+this.app_name+'/collaboration/event'); 
-        this.SSE_OPT = {withCredentials:true} ;
+		this.SSE_URL = OC.generateUrl('apps/' + this.appName + '/collaboration/event')
+		this.SSE_OPT = { withCredentials: true }
 
-        this.init().then(function(data) {
-            console.log("CE : Collaboration started for "+ self.app_name) ;
-            self.addUser() ;
+		this.init().then(function(data) {
+			console.log('CE : Collaboration started for ' + self.appName)
+			self.addUser()
 
-            // because we may arrive in an allready running session
-            // get all steps from last last save 
-            self.getSteps().then(function(steps){
-                steps.forEach(step => emit(self.app_name+"::externalAddStep",step)) ;
-            })
-            
-            // start pulling for change
-            self.communicationStarted = true ;
-            console.log("CE : starting communication ") ; 
-            self.startCommunication() ;        
-        });
-        
-    },
+			// because we may arrive in an allready running session
+			// get all steps from last last save
+			self.getSteps().then(function(steps) {
+				steps.forEach(step => emit(self.appName + '::externalAddStep', step))
+			})
 
-    stop: function() {
-        this.removeUser() ;
-        this.stopCommunication() ;
-        console.log("CE : Collaboration stopped for "+ this.app_name) ;
-    },
+			// start pulling for change
+			self.communicationStarted = true
+			console.log('CE : starting communication ')
+			self.startCommunication()
+		})
 
-    init: function() {
-        var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/startsession');
-        this.id = window.FileList.findFile(this.filename).id
+	},
 
-        var ajx =  $.ajax({
-            type: 'POST',
-            url: url,
-            data: {id: this.id }
-        }) ;    
-        return ajx.promise() ;
-    },
+	stop: function() {
+		this.removeUser()
+		this.stopCommunication()
+		console.log('CE : Collaboration stopped for ' + this.appName)
+	},
 
-    addUser: function() {
-        var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/adduser');
-        console.log("CE : Adding user " + OC.currentUser ) ;
+	init: function() {
+		const url = OC.generateUrl('apps/' + this.appName + '/collaboration/startsession')
+		this.id = window.FileList.findFile(this.filename).id
 
-        var ajx = $.ajax({
-            type: 'POST',
-            url: url,
-            data: {id: this.id,
-                   user: OC.currentUser
-                  }
-        }) ;
-        return ajx.promise() ;
-    },
+		const ajx = $.ajax({
+			type: 'POST',
+			url: url,
+			data: { id: this.id },
+		})
+		return ajx.promise()
+	},
 
-    removeUser: function() {
-        var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/removeuser');
-        console.log("CE : Removing user " + OC.currentUser ) ;
+	addUser: function() {
+		const url = OC.generateUrl('apps/' + this.appName + '/collaboration/adduser')
+		console.log('CE : Adding user ' + OC.currentUser)
 
-        var ajx = $.ajax({
-            type: 'POST',
-            url: url,
-            data: {id: this.id,
-                   user: OC.currentUser
-                  }
-        }) ;
-        return ajx.promise() ;
-    },
+		const ajx = $.ajax({
+			type: 'POST',
+			url: url,
+			data: { id: this.id,
+				user: OC.currentUser,
+			},
+		})
+		return ajx.promise()
+	},
 
-    sendStep: function(payload) {
+	removeUser: function() {
+		const url = OC.generateUrl('apps/' + this.appName + '/collaboration/removeuser')
+		console.log('CE : Removing user ' + OC.currentUser)
 
-        var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/addstep');
-        console.log("CE : Sending ",payload.type," step"  ) ;
-        var ajx = $.ajax({
-            type: 'POST',
-            url: url,
-            data: {id: this.id,
-                   user: OC.currentUser,
-                   type: payload.type,
-                   step: JSON.stringify(payload.step)
-                  }
-        }) ;
+		const ajx = $.ajax({
+			type: 'POST',
+			url: url,
+			data: { id: this.id,
+				user: OC.currentUser,
+			},
+		})
+		return ajx.promise()
+	},
 
-        return ajx.promise() ;
+	sendStep: function(payload) {
 
-    },
+		const url = OC.generateUrl('apps/' + this.appName + '/collaboration/addstep')
+		console.log('CE : Sending ', payload.type, ' step')
+		const ajx = $.ajax({
+			type: 'POST',
+			url: url,
+			data: { id: this.id,
+				user: OC.currentUser,
+				type: payload.type,
+				step: JSON.stringify(payload.step),
+			},
+		})
 
-    getSteps: function() {
-        var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/getsteps');
-        console.log("CE : Getting initial steps") ;
-        var ajx = $.ajax({
-            type: 'GET',
-            url: url,
-            data: {
-                   id: this.id
-                  }
-        }) ;
+		return ajx.promise()
 
-        return ajx.promise() ;
-    },
+	},
 
-    startCommunication: function() {
-        var self = this ;
- 
-        this.longPull().done(function(steps) {
-            steps.forEach(function (step) {
-                if (step.userId != OC.currentUser) {
-                    emit(self.app_name+"::externalAddStep",step) ;
-                    console.log("CE : A step for me !") ;
-                }  ;
-            }) ;
-            if (self.communicationStarted == true) {
-                self.startCommunication() ;	
-            }
-        })
-    },
+	getSteps: function() {
+		const url = OC.generateUrl('apps/' + this.appName + '/collaboration/getsteps')
+		console.log('CE : Getting initial steps')
+		const ajx = $.ajax({
+			type: 'GET',
+			url: url,
+			data: {
+				id: this.id,
+			},
+		})
 
-    longPull: function() {
-        var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/pushstep');
-        console.log("CE : Poll again ...") ;
-        var ajx = $.ajax({
-            type: 'GET',
-            url: url,
-            data: {
-                   id: this.id,
-                   user: OC.currentUser
-                  }
-        }) ;
+		return ajx.promise()
+	},
 
-        return ajx.promise() ;
+	startCommunication: function() {
+		const self = this
 
-    },
+		this.longPull().done(function(steps) {
+			steps.forEach(function(step) {
+				if (step.userId != OC.currentUser) {
+					emit(self.appName + '::externalAddStep', step)
+					console.log('CE : A step for me !')
+				}
+			})
+			if (self.communicationStarted == true) {
+				self.startCommunication()
+			}
+		})
+	},
 
-    stopCommunication: function(){
-       this.communicationStarted = false ;
-        // this.source.close() ;
-    }
+	longPull: function() {
+		const url = OC.generateUrl('apps/' + this.appName + '/collaboration/pushstep')
+		console.log('CE : Poll again ...')
+		const ajx = $.ajax({
+			type: 'GET',
+			url: url,
+			data: {
+				id: this.id,
+				user: OC.currentUser,
+			},
+		})
+
+		return ajx.promise()
+
+	},
+
+	stopCommunication: function() {
+		this.communicationStarted = false
+		// this.source.close() ;
+	},
 
 }

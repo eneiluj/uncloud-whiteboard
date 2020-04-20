@@ -18,19 +18,19 @@
  *
  */
 
-const APP_NAME = "whiteboard" ;
-const APP_EXT  = "wbr" ;
-const APP_MIME = "application/wbr" ;
+import ApplicationPrototype from './prototype.js'
 
-__webpack_nonce__ = btoa(OC.requestToken) ;
-__webpack_public_path__ = OC.linkTo(APP_NAME, 'js/');
+const APP_NAME = 'whiteboard'
+const APP_EXT = 'wbr'
+const APP_MIME = 'application/wbr'
 
-import ApplicationPrototype from './prototype.js' ;
+__webpack_nonce__ = btoa(OC.requestToken)
+__webpack_public_path__ = OC.linkTo(APP_NAME, 'js/')
 
-OCA.whiteboard = ApplicationPrototype ;
+OCA.whiteboard = ApplicationPrototype
 
-$(document).ready(function () {
+$(document).ready(function() {
 
-    OCA.whiteboard.initialise( APP_NAME,APP_EXT, APP_MIME ) ;
+	OCA.whiteboard.initialise(APP_NAME, APP_EXT, APP_MIME)
 
-});
+})

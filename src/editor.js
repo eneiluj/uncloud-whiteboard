@@ -19,120 +19,120 @@
  */
 import { emit, subscribe, unsubscribe } from '@nextcloud/event-bus'
 
-export default { 
-    name: "editor",
+export default {
+	name: 'editor',
 
-    start: function (app_name,filename,context) {
+	start: function(app_name, filename, context) {
 
-        var self = this ;
-        
-        this.app_name = app_name ;
-        this.filename = filename ;
-        this.context  = context  ;
+		const self = this
 
-        this.init().then(function(){
-                self.loadContent()   ;
-                self.setupCallbacks() ;
-        }) ;
+		this.app_name = app_name
+		this.filename = filename
+		this.context = context
 
-    },
-    
-    init: function () {
-        return import(/* webpackChunkName: "literallycanvas" */  "literallycanvas").then(LC => {
-            this.LC = LC ;
-            this.whiteboard = LC.init(
-                    document.getElementById(this.app_name+'-editor'),
-                    {
-                        imageURLPrefix: OC.linkTo(this.app_name,'img/lc_assets') ,
-                        toolbarPosition: 'top'
-                    }                
-                )
-        }) ;
-    },
+		this.init().then(function() {
+			self.loadContent()
+			self.setupCallbacks()
+		})
 
-    //load whiteboard
-    loadContent: function() {
-        
-        var self = this ;
-        var url = OC.generateUrl('apps/'+this.app_name+'/file/load');
+	},
 
-        $.ajax({
-            type: 'GET',
-            url: url,
-            data: {path: this.context.dir + "/" + this.filename }
-        }).done(function(content){
-            //console.log("WB : loaded") ;
-            if (content.trim() != "" ) {
-                self.whiteboard.loadSnapshot(JSON.parse(content)) ;
-            } ;
-        }) ;
-    },
+	init: function() {
+		return import(/* webpackChunkName: "literallycanvas" */ 'literallycanvas').then(LC => {
+			this.LC = LC
+			this.whiteboard = LC.init(
+				document.getElementById(this.app_name + '-editor'),
+				{
+					imageURLPrefix: OC.linkTo(this.app_name, 'img/lc_assets'),
+					toolbarPosition: 'top',
+				}
+			)
+		})
+	},
 
-    //save whiteboard
-    saveContent: function() {
+	// load whiteboard
+	loadContent: function() {
 
-        var self = this ;
-        
-        var url = OC.generateUrl('apps/'+this.app_name+'/file/save');
+		const self = this
+		const url = OC.generateUrl('apps/' + this.app_name + '/file/load')
 
-        var postObject = {
-            content: JSON.stringify(this.whiteboard.getSnapshot()),
-            path: this.context.dir + "/" + this.filename
-        };
+		$.ajax({
+			type: 'GET',
+			url: url,
+			data: { path: this.context.dir + '/' + this.filename },
+		}).done(function(content) {
+			// console.log("WB : loaded") ;
+			if (content.trim() != '') {
+				self.whiteboard.loadSnapshot(JSON.parse(content))
+			}
+		})
+	},
 
-        $.ajax({
-            type: 'POST',
-            url: url,
-            data: postObject
-        }).done(function(content){
-            OC.Notification.showTemporary("File saved") ;
-            var payload = {
-                'type' : 'save',
-                'step' : 'NA'
-            } ;
-            emit(self.app_name+"::editorAddStep",payload) ;
-        })
+	// save whiteboard
+	saveContent: function() {
 
-    },
+		const self = this
 
-    //setup callback
-    setupCallbacks: function (){
-            var self = this ;
+		const url = OC.generateUrl('apps/' + this.app_name + '/file/save')
 
-            // set save callback
-            //this.whiteboard.on('drawingChange', function(data) {
+		const postObject = {
+			content: JSON.stringify(this.whiteboard.getSnapshot()),
+			path: this.context.dir + '/' + this.filename,
+		}
 
-                //emit(self.app_name+"::editorContentChange",data) ,
+		$.ajax({
+			type: 'POST',
+			url: url,
+			data: postObject,
+		}).done(function(content) {
+			OC.Notification.showTemporary('File saved')
+			const payload = {
+				'type': 'save',
+				'step': 'NA',
+			}
+			emit(self.app_name + '::editorAddStep', payload)
+		})
 
-                //self.saveContent() ;        
-            //});
+	},
 
-            this.whiteboard.on('shapeSave', function(data) {
-                var payload = {
-                    'type' : 'shapeSave',
-                    'step' : self.LC.shapeToJSON(data.shape)
-                } ;
-                emit(self.app_name+"::editorAddStep",payload) ;
-                console.log("ED: Creating NewShape ") ;
-                return data ;
-            });
+	// setup callback
+	setupCallbacks: function() {
+		const self = this
 
-    },
+		// set save callback
+		// this.whiteboard.on('drawingChange', function(data) {
 
-    //destroy editor 
-    stop: function() {
-        this.whiteboard.teardown() ;
-    },
+		// emit(self.app_name+"::editorContentChange",data) ,
 
-    applyChange: function(step) {
-        switch (step.stepType) {
-            case 'shapeSave':
-                    var shapeStep = this.LC.JSONToShape(JSON.parse(step.stepData)) ;
-                    this.whiteboard.saveShape(shapeStep,false) ;
-                break ;
-            default: console.warn("unknown step type")
-        }
-        
-    },
+		// self.saveContent() ;
+		// });
+
+		this.whiteboard.on('shapeSave', function(data) {
+			const payload = {
+				'type': 'shapeSave',
+				'step': self.LC.shapeToJSON(data.shape),
+			}
+			emit(self.app_name + '::editorAddStep', payload)
+			console.log('ED: Creating NewShape ')
+			return data
+		})
+
+	},
+
+	// destroy editor
+	stop: function() {
+		this.whiteboard.teardown()
+	},
+
+	applyChange: function(step) {
+		switch (step.stepType) {
+		case 'shapeSave':
+			var shapeStep = this.LC.JSONToShape(JSON.parse(step.stepData))
+			this.whiteboard.saveShape(shapeStep, false)
+			break
+		default: console.warn('unknown step type')
+		}
+
+	},
 
 }
