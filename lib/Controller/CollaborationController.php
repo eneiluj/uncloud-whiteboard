@@ -22,25 +22,24 @@
 namespace OCA\whiteboard\Controller ;
 
 use OCP\AppFramework\Controller  ;
-use OCP\IRequest;
-use OCP\Files\File;
-use OCP\Files\Folder;
+use OCP\IRequest;;
 use OCP\User ;
 use OCP\ICache ;
 use OCP\ICacheFactory;
-use OCA\whiteboard\Collaboration\SimpleFileCollaborationEngine ;
+use OCA\whiteboard\Collaboration\CollaborationEngine ;
 
 class CollaborationController extends Controller {
     /**
      * @NoAdminRequired
      * 
      **/
-    public function __construct($AppName, IRequest $request, Folder $userFolder ,ICacheFactory $cacheFactory ) {
+    public function __construct($AppName,IRequest $request,ICacheFactory $cacheFactory, CollaborationEngine $engine) {
+
         parent::__construct($AppName, $request);
 
-        $this->id = $request->getParam("id") ;
+        //$this->id = $request->getParam("id") ;
     
-        $this->engine = new SimpleFileCollaborationEngine($this->id,$cacheFactory) ;
+        $this->engine = $engine ;
 
     }
 
@@ -57,7 +56,7 @@ class CollaborationController extends Controller {
      * 
      **/
     public function addUser($id,$user) {
-        return $this->engine->addUser($user) ;
+        return $this->engine->addUser($id,$user) ;
     }
 
     /**
@@ -65,7 +64,7 @@ class CollaborationController extends Controller {
      * 
      **/
     public function removeUser($id,$user) {
-        return $this->engine->removeUser($user) ;
+        return $this->engine->removeUser($id,$user) ;
     }
 
     /**
@@ -79,24 +78,29 @@ class CollaborationController extends Controller {
     /**
      * @NoAdminRequired
      * 
+     * @param int $id
+     * @param string $user
+     * @param string $type
+     * @param string $step
+     * 
      **/
-    public function addStep($id,$user,$type,$step) {
-        return $this->engine->addStep($user,$type,$step) ;
+    public function addStep(int $id,string $user,string $type, string $step) {
+        return $this->engine->addStep($id,$user,$type,$step) ;
     }
 
     /**
      * @NoAdminRequired
      * 
      **/
-    public function getSteps($id,$from,$handlecheckpoint) {
-        return $this->engine->getSteps($from,$handlecheckpoint) ;
+    public function getSteps($id) {
+        return $this->engine->getSteps($id) ;
     }
 
     /**
      * @NoAdminRequired
      * 
      **/
-    public function pushStep($id) {
-        return $this->engine->waitForNewSteps() ;
+    public function pushStep(int $id,string $user) {
+        return $this->engine->waitForNewSteps($id,$user) ;
     }
 }

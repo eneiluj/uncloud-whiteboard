@@ -12,9 +12,11 @@
     "watch": "NODE_ENV=none webpack --progress --watch --config webpack.dev.js "
   },
   "devDependencies": {
-    "webpack": "^4.42.0"
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11"
   },
   "dependencies": {
+    "@nextcloud/event-bus": "^1.1.4",
     "create-react-class": "^15.6.3",
     "literallycanvas": "^0.5.2",
     "react": "^16.13.1",

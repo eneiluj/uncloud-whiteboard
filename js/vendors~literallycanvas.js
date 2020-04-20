@@ -1,48 +1,48 @@
-(window["webpackJsonpFileWhiteboard"] = window["webpackJsonpFileWhiteboard"] || []).push([[1],Array(109).concat([
-/* 109 */
+(window["webpackJsonpFileWhiteboard"] = window["webpackJsonpFileWhiteboard"] || []).push([[1],Array(110).concat([
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var LiterallyCanvasModel, LiterallyCanvasReactComponent, baseTools, canvasRenderer, conversion, defaultImageURLPrefix, defaultOptions, defaultTools, defineOptionsStyle, init, initReactDOM, initWithoutGUI, localize, registerJQueryPlugin, renderSnapshotToImage, renderSnapshotToSVG, setDefaultImageURLPrefix, shapes, svgRenderer, tools, util;
 
-__webpack_require__(110);
-
 __webpack_require__(111);
 
-LiterallyCanvasModel = __webpack_require__(112);
+__webpack_require__(112);
 
-defaultOptions = __webpack_require__(127);
+LiterallyCanvasModel = __webpack_require__(113);
 
-canvasRenderer = __webpack_require__(118);
+defaultOptions = __webpack_require__(128);
 
-svgRenderer = __webpack_require__(120);
+canvasRenderer = __webpack_require__(119);
 
-shapes = __webpack_require__(116);
+svgRenderer = __webpack_require__(121);
 
-util = __webpack_require__(117);
+shapes = __webpack_require__(117);
 
-renderSnapshotToImage = __webpack_require__(123);
+util = __webpack_require__(118);
 
-renderSnapshotToSVG = __webpack_require__(124);
+renderSnapshotToImage = __webpack_require__(124);
 
-localize = __webpack_require__(136).localize;
+renderSnapshotToSVG = __webpack_require__(125);
 
-LiterallyCanvasReactComponent = __webpack_require__(137);
+localize = __webpack_require__(137).localize;
 
-initReactDOM = __webpack_require__(177);
+LiterallyCanvasReactComponent = __webpack_require__(138);
 
-__webpack_require__(171);
+initReactDOM = __webpack_require__(178);
 
 __webpack_require__(172);
 
-__webpack_require__(174);
+__webpack_require__(173);
 
 __webpack_require__(175);
 
-__webpack_require__(178);
-
 __webpack_require__(176);
 
-defineOptionsStyle = __webpack_require__(169).defineOptionsStyle;
+__webpack_require__(179);
+
+__webpack_require__(177);
+
+defineOptionsStyle = __webpack_require__(170).defineOptionsStyle;
 
 conversion = {
   snapshotToShapes: function(snapshot) {
@@ -60,19 +60,19 @@ conversion = {
   }
 };
 
-baseTools = __webpack_require__(126);
+baseTools = __webpack_require__(127);
 
 tools = {
-  Pencil: __webpack_require__(125),
-  Eraser: __webpack_require__(128),
-  Line: __webpack_require__(129),
-  Rectangle: __webpack_require__(130),
-  Ellipse: __webpack_require__(131),
-  Text: __webpack_require__(132),
-  Polygon: __webpack_require__(133),
-  Pan: __webpack_require__(134),
-  Eyedropper: __webpack_require__(135),
-  SelectShape: __webpack_require__(179),
+  Pencil: __webpack_require__(126),
+  Eraser: __webpack_require__(129),
+  Line: __webpack_require__(130),
+  Rectangle: __webpack_require__(131),
+  Ellipse: __webpack_require__(132),
+  Text: __webpack_require__(133),
+  Polygon: __webpack_require__(134),
+  Pan: __webpack_require__(135),
+  Eyedropper: __webpack_require__(136),
+  SelectShape: __webpack_require__(180),
   Tool: baseTools.Tool,
   ToolWithStroke: baseTools.ToolWithStroke
 };
@@ -101,7 +101,7 @@ init = function(el, opts) {
     child = ref[i];
     el.removeChild(child);
   }
-  return __webpack_require__(177)(el, opts);
+  return __webpack_require__(178)(el, opts);
 };
 
 initWithoutGUI = function(el, opts) {
@@ -188,7 +188,7 @@ module.exports = {
 
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -208,7 +208,7 @@ module.exports = {
 })();
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -227,7 +227,7 @@ if (!CanvasRenderingContext2D.prototype.setLineDash) {
 module.exports = null;
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var INFINITE, JSONToShape, LiterallyCanvas, Pencil, actions, bindEvents, createShape, math, ref, renderShapeToContext, renderShapeToSVG, renderSnapshotToImage, renderSnapshotToSVG, shapeToJSON, util,
@@ -235,25 +235,25 @@ var INFINITE, JSONToShape, LiterallyCanvas, Pencil, actions, bindEvents, createS
   slice = [].slice,
   indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-actions = __webpack_require__(113);
+actions = __webpack_require__(114);
 
-bindEvents = __webpack_require__(114);
+bindEvents = __webpack_require__(115);
 
-math = __webpack_require__(115);
+math = __webpack_require__(116);
 
-ref = __webpack_require__(116), createShape = ref.createShape, shapeToJSON = ref.shapeToJSON, JSONToShape = ref.JSONToShape;
+ref = __webpack_require__(117), createShape = ref.createShape, shapeToJSON = ref.shapeToJSON, JSONToShape = ref.JSONToShape;
 
-renderShapeToContext = __webpack_require__(118).renderShapeToContext;
+renderShapeToContext = __webpack_require__(119).renderShapeToContext;
 
-renderShapeToSVG = __webpack_require__(120).renderShapeToSVG;
+renderShapeToSVG = __webpack_require__(121).renderShapeToSVG;
 
-renderSnapshotToImage = __webpack_require__(123);
+renderSnapshotToImage = __webpack_require__(124);
 
-renderSnapshotToSVG = __webpack_require__(124);
+renderSnapshotToSVG = __webpack_require__(125);
 
-Pencil = __webpack_require__(125);
+Pencil = __webpack_require__(126);
 
-util = __webpack_require__(117);
+util = __webpack_require__(118);
 
 INFINITE = 'infinite';
 
@@ -1083,7 +1083,7 @@ module.exports = LiterallyCanvas = (function() {
 
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports) {
 
 var AddShapeAction, ClearAction, MoveAction;
@@ -1198,7 +1198,7 @@ module.exports = {
 
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports) {
 
 var bindEvents, buttonIsDown, coordsForTouchEvent, position;
@@ -1335,14 +1335,14 @@ module.exports = bindEvents = function(lc, canvas, panWithKeyboard) {
 
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Point, _slope, math, normals, unit, util;
 
-Point = __webpack_require__(116).Point;
+Point = __webpack_require__(117).Point;
 
-util = __webpack_require__(117);
+util = __webpack_require__(118);
 
 math = {};
 
@@ -1427,20 +1427,20 @@ module.exports = math;
 
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var JSONToShape, LinePath, TextRenderer, _createLinePathFromData, _doAllPointsShareStyle, _dual, _mid, _refine, bspline, createShape, defineCanvasRenderer, defineSVGRenderer, defineShape, lineEndCapShapes, linePathFuncs, ref, ref1, renderShapeToContext, renderShapeToSVG, shapeToJSON, shapes, util;
 
-util = __webpack_require__(117);
+util = __webpack_require__(118);
 
-TextRenderer = __webpack_require__(121);
+TextRenderer = __webpack_require__(122);
 
-lineEndCapShapes = __webpack_require__(119);
+lineEndCapShapes = __webpack_require__(120);
 
-ref = __webpack_require__(118), defineCanvasRenderer = ref.defineCanvasRenderer, renderShapeToContext = ref.renderShapeToContext;
+ref = __webpack_require__(119), defineCanvasRenderer = ref.defineCanvasRenderer, renderShapeToContext = ref.renderShapeToContext;
 
-ref1 = __webpack_require__(120), defineSVGRenderer = ref1.defineSVGRenderer, renderShapeToSVG = ref1.renderShapeToSVG;
+ref1 = __webpack_require__(121), defineSVGRenderer = ref1.defineSVGRenderer, renderShapeToSVG = ref1.renderShapeToSVG;
 
 shapes = {};
 
@@ -2363,7 +2363,7 @@ module.exports = {
 
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var renderShapeToContext, renderShapeToSVG, slice, util,
@@ -2371,9 +2371,9 @@ var renderShapeToContext, renderShapeToSVG, slice, util,
 
 slice = Array.prototype.slice;
 
-renderShapeToContext = __webpack_require__(118).renderShapeToContext;
+renderShapeToContext = __webpack_require__(119).renderShapeToContext;
 
-renderShapeToSVG = __webpack_require__(120).renderShapeToSVG;
+renderShapeToSVG = __webpack_require__(121).renderShapeToSVG;
 
 util = {
   addImageOnload: function(img, fn) {
@@ -2584,12 +2584,12 @@ module.exports = util;
 
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _drawRawLinePath, defineCanvasRenderer, drawErasedLinePath, drawErasedLinePathLatest, drawLinePath, drawLinePathLatest, lineEndCapShapes, noop, renderShapeToCanvas, renderShapeToContext, renderers;
 
-lineEndCapShapes = __webpack_require__(119);
+lineEndCapShapes = __webpack_require__(120);
 
 renderers = {};
 
@@ -2848,7 +2848,7 @@ module.exports = {
 
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -2902,12 +2902,12 @@ module.exports = {
 
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var defineSVGRenderer, entityMap, escapeHTML, lineEndCapShapes, renderShapeToSVG, renderers;
 
-lineEndCapShapes = __webpack_require__(119);
+lineEndCapShapes = __webpack_require__(120);
 
 renderers = {};
 
@@ -3063,12 +3063,12 @@ module.exports = {
 
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TextRenderer, getLinesToRender, getNextLine, parseFontString;
 
-__webpack_require__(122);
+__webpack_require__(123);
 
 parseFontString = function(font) {
   var fontFamily, fontItems, fontSize, item, j, len, maybeSize, remainingFontString;
@@ -3270,7 +3270,7 @@ module.exports = TextRenderer;
 
 
 /***/ }),
-/* 122 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3490,14 +3490,14 @@ module.exports = TextRenderer;
 })();
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var INFINITE, JSONToShape, renderWatermark, util;
 
-util = __webpack_require__(117);
+util = __webpack_require__(118);
 
-JSONToShape = __webpack_require__(116).JSONToShape;
+JSONToShape = __webpack_require__(117).JSONToShape;
 
 INFINITE = 'infinite';
 
@@ -3592,14 +3592,14 @@ module.exports = function(snapshot, opts) {
 
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var INFINITE, JSONToShape, util;
 
-util = __webpack_require__(117);
+util = __webpack_require__(118);
 
-JSONToShape = __webpack_require__(116).JSONToShape;
+JSONToShape = __webpack_require__(117).JSONToShape;
 
 INFINITE = 'infinite';
 
@@ -3670,16 +3670,16 @@ module.exports = function(snapshot, opts) {
 
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Pencil, ToolWithStroke, createShape,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-ToolWithStroke = __webpack_require__(126).ToolWithStroke;
+ToolWithStroke = __webpack_require__(127).ToolWithStroke;
 
-createShape = __webpack_require__(116).createShape;
+createShape = __webpack_require__(117).createShape;
 
 module.exports = Pencil = (function(superClass) {
   extend(Pencil, superClass);
@@ -3735,7 +3735,7 @@ module.exports = Pencil = (function(superClass) {
 
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ (function(module, exports) {
 
 var Tool, ToolWithStroke, tools,
@@ -3812,7 +3812,7 @@ module.exports = tools;
 
 
 /***/ }),
-/* 127 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3836,20 +3836,20 @@ module.exports = {
   zoomStep: 0.2,
   snapshot: null,
   onInit: function onInit() {},
-  tools: [__webpack_require__(125), __webpack_require__(128), __webpack_require__(129), __webpack_require__(130), __webpack_require__(131), __webpack_require__(132), __webpack_require__(133), __webpack_require__(134), __webpack_require__(135)]
+  tools: [__webpack_require__(126), __webpack_require__(129), __webpack_require__(130), __webpack_require__(131), __webpack_require__(132), __webpack_require__(133), __webpack_require__(134), __webpack_require__(135), __webpack_require__(136)]
 };
 
 /***/ }),
-/* 128 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Eraser, Pencil, createShape,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-Pencil = __webpack_require__(125);
+Pencil = __webpack_require__(126);
 
-createShape = __webpack_require__(116).createShape;
+createShape = __webpack_require__(117).createShape;
 
 module.exports = Eraser = (function(superClass) {
   extend(Eraser, superClass);
@@ -3881,16 +3881,16 @@ module.exports = Eraser = (function(superClass) {
 
 
 /***/ }),
-/* 129 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Line, ToolWithStroke, createShape,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-ToolWithStroke = __webpack_require__(126).ToolWithStroke;
+ToolWithStroke = __webpack_require__(127).ToolWithStroke;
 
-createShape = __webpack_require__(116).createShape;
+createShape = __webpack_require__(117).createShape;
 
 module.exports = Line = (function(superClass) {
   extend(Line, superClass);
@@ -3941,16 +3941,16 @@ module.exports = Line = (function(superClass) {
 
 
 /***/ }),
-/* 130 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Rectangle, ToolWithStroke, createShape,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-ToolWithStroke = __webpack_require__(126).ToolWithStroke;
+ToolWithStroke = __webpack_require__(127).ToolWithStroke;
 
-createShape = __webpack_require__(116).createShape;
+createShape = __webpack_require__(117).createShape;
 
 module.exports = Rectangle = (function(superClass) {
   extend(Rectangle, superClass);
@@ -3989,16 +3989,16 @@ module.exports = Rectangle = (function(superClass) {
 
 
 /***/ }),
-/* 131 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Ellipse, ToolWithStroke, createShape,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-ToolWithStroke = __webpack_require__(126).ToolWithStroke;
+ToolWithStroke = __webpack_require__(127).ToolWithStroke;
 
-createShape = __webpack_require__(116).createShape;
+createShape = __webpack_require__(117).createShape;
 
 module.exports = Ellipse = (function(superClass) {
   extend(Ellipse, superClass);
@@ -4037,16 +4037,16 @@ module.exports = Ellipse = (function(superClass) {
 
 
 /***/ }),
-/* 132 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Text, Tool, createShape, getIsPointInBox,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-Tool = __webpack_require__(126).Tool;
+Tool = __webpack_require__(127).Tool;
 
-createShape = __webpack_require__(116).createShape;
+createShape = __webpack_require__(117).createShape;
 
 getIsPointInBox = function(point, box) {
   if (point.x < box.x) {
@@ -4401,16 +4401,16 @@ module.exports = Text = (function(superClass) {
 
 
 /***/ }),
-/* 133 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Polygon, ToolWithStroke, createShape,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-ToolWithStroke = __webpack_require__(126).ToolWithStroke;
+ToolWithStroke = __webpack_require__(127).ToolWithStroke;
 
-createShape = __webpack_require__(116).createShape;
+createShape = __webpack_require__(117).createShape;
 
 module.exports = Polygon = (function(superClass) {
   extend(Polygon, superClass);
@@ -4620,16 +4620,16 @@ module.exports = Polygon = (function(superClass) {
 
 
 /***/ }),
-/* 134 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Pan, Tool, createShape,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-Tool = __webpack_require__(126).Tool;
+Tool = __webpack_require__(127).Tool;
 
-createShape = __webpack_require__(116).createShape;
+createShape = __webpack_require__(117).createShape;
 
 module.exports = Pan = (function(superClass) {
   extend(Pan, superClass);
@@ -4692,14 +4692,14 @@ module.exports = Pan = (function(superClass) {
 
 
 /***/ }),
-/* 135 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Eyedropper, Tool, getPixel,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-Tool = __webpack_require__(126).Tool;
+Tool = __webpack_require__(127).Tool;
 
 getPixel = function(ctx, arg) {
   var pixel, x, y;
@@ -4756,7 +4756,7 @@ module.exports = Eyedropper = (function(superClass) {
 
 
 /***/ }),
-/* 136 */
+/* 137 */
 /***/ (function(module, exports) {
 
 var _, localize, strings;
@@ -4780,32 +4780,32 @@ module.exports = {
 
 
 /***/ }),
-/* 137 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var React = __webpack_require__(138);
-var createReactClass = __webpack_require__(144);
+var React = __webpack_require__(139);
+var createReactClass = __webpack_require__(145);
 
-var _require = __webpack_require__(151),
+var _require = __webpack_require__(152),
     findDOMNode = _require.findDOMNode;
 
-var _require2 = __webpack_require__(117),
+var _require2 = __webpack_require__(118),
     classSet = _require2.classSet;
 
-var Picker = __webpack_require__(158);
-var Options = __webpack_require__(168);
-var createToolButton = __webpack_require__(170);
-var LiterallyCanvasModel = __webpack_require__(112);
-var defaultOptions = __webpack_require__(127);
+var Picker = __webpack_require__(159);
+var Options = __webpack_require__(169);
+var createToolButton = __webpack_require__(171);
+var LiterallyCanvasModel = __webpack_require__(113);
+var defaultOptions = __webpack_require__(128);
 
-__webpack_require__(171);
 __webpack_require__(172);
-__webpack_require__(174);
+__webpack_require__(173);
 __webpack_require__(175);
 __webpack_require__(176);
+__webpack_require__(177);
 
 var CanvasContainer = createReactClass({
   displayName: 'CanvasContainer',
@@ -4895,13 +4895,13 @@ var LiterallyCanvas = createReactClass({
 module.exports = LiterallyCanvas;
 
 /***/ }),
-/* 138 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var React;
 
 try {
-  React = __webpack_require__(139);
+  React = __webpack_require__(140);
 } catch (error) {
   React = window.React;
 }
@@ -4914,19 +4914,19 @@ module.exports = React;
 
 
 /***/ }),
-/* 139 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 if (false) {} else {
-  module.exports = __webpack_require__(140);
+  module.exports = __webpack_require__(141);
 }
 
 
 /***/ }),
-/* 140 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4947,8 +4947,8 @@ if (true) {
   (function() {
 'use strict';
 
-var _assign = __webpack_require__(141);
-var checkPropTypes = __webpack_require__(142);
+var _assign = __webpack_require__(142);
+var checkPropTypes = __webpack_require__(143);
 
 var ReactVersion = '16.13.1';
 
@@ -6845,7 +6845,7 @@ exports.version = ReactVersion;
 
 
 /***/ }),
-/* 141 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6942,7 +6942,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 
 
 /***/ }),
-/* 142 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6958,7 +6958,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 var printWarning = function() {};
 
 if (true) {
-  var ReactPropTypesSecret = __webpack_require__(143);
+  var ReactPropTypesSecret = __webpack_require__(144);
   var loggedTypeFailures = {};
   var has = Function.call.bind(Object.prototype.hasOwnProperty);
 
@@ -7051,7 +7051,7 @@ module.exports = checkPropTypes;
 
 
 /***/ }),
-/* 143 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7070,20 +7070,20 @@ module.exports = ReactPropTypesSecret;
 
 
 /***/ }),
-/* 144 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var React, createReactClass;
 
 try {
-  createReactClass = __webpack_require__(145);
+  createReactClass = __webpack_require__(146);
 } catch (error) {
   createReactClass = window.createReactClass;
 }
 
 if (createReactClass == null) {
   try {
-    React = __webpack_require__(139);
+    React = __webpack_require__(140);
     createReactClass = React.createClass;
   } catch (error) {
     createReactClass = window.React.createClass;
@@ -7098,7 +7098,7 @@ module.exports = createReactClass;
 
 
 /***/ }),
-/* 145 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7112,8 +7112,8 @@ module.exports = createReactClass;
 
 
 
-var React = __webpack_require__(139);
-var factory = __webpack_require__(146);
+var React = __webpack_require__(140);
+var factory = __webpack_require__(147);
 
 if (typeof React === 'undefined') {
   throw Error(
@@ -7133,7 +7133,7 @@ module.exports = factory(
 
 
 /***/ }),
-/* 146 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7147,13 +7147,13 @@ module.exports = factory(
 
 
 
-var _assign = __webpack_require__(141);
+var _assign = __webpack_require__(142);
 
-var emptyObject = __webpack_require__(147);
-var _invariant = __webpack_require__(148);
+var emptyObject = __webpack_require__(148);
+var _invariant = __webpack_require__(149);
 
 if (true) {
-  var warning = __webpack_require__(149);
+  var warning = __webpack_require__(150);
 }
 
 var MIXINS_KEY = 'mixins';
@@ -8064,7 +8064,7 @@ module.exports = factory;
 
 
 /***/ }),
-/* 147 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8087,7 +8087,7 @@ if (true) {
 module.exports = emptyObject;
 
 /***/ }),
-/* 148 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8146,7 +8146,7 @@ function invariant(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 
 /***/ }),
-/* 149 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8160,7 +8160,7 @@ module.exports = invariant;
 
 
 
-var emptyFunction = __webpack_require__(150);
+var emptyFunction = __webpack_require__(151);
 
 /**
  * Similar to invariant but only logs a warning if the condition is not met.
@@ -8214,7 +8214,7 @@ if (true) {
 module.exports = warning;
 
 /***/ }),
-/* 150 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8256,20 +8256,20 @@ emptyFunction.thatReturnsArgument = function (arg) {
 module.exports = emptyFunction;
 
 /***/ }),
-/* 151 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var ReactDOM;
 
 try {
-  ReactDOM = __webpack_require__(152);
+  ReactDOM = __webpack_require__(153);
 } catch (error) {
   ReactDOM = window.ReactDOM;
 }
 
 if (ReactDOM == null) {
   try {
-    ReactDOM = __webpack_require__(139);
+    ReactDOM = __webpack_require__(140);
   } catch (error) {
     ReactDOM = window.React;
   }
@@ -8283,7 +8283,7 @@ module.exports = ReactDOM;
 
 
 /***/ }),
-/* 152 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8318,12 +8318,12 @@ function checkDCE() {
 }
 
 if (false) {} else {
-  module.exports = __webpack_require__(153);
+  module.exports = __webpack_require__(154);
 }
 
 
 /***/ }),
-/* 153 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8344,11 +8344,11 @@ if (true) {
   (function() {
 'use strict';
 
-var React = __webpack_require__(139);
-var _assign = __webpack_require__(141);
-var Scheduler = __webpack_require__(154);
-var checkPropTypes = __webpack_require__(142);
-var tracing = __webpack_require__(156);
+var React = __webpack_require__(140);
+var _assign = __webpack_require__(142);
+var Scheduler = __webpack_require__(155);
+var checkPropTypes = __webpack_require__(143);
+var tracing = __webpack_require__(157);
 
 var ReactSharedInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED; // Prevent newer renderers from RTE when used with older react package versions.
 // Current owner and dispatcher used to share the same ref,
@@ -33342,19 +33342,19 @@ exports.version = ReactVersion;
 
 
 /***/ }),
-/* 154 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 if (false) {} else {
-  module.exports = __webpack_require__(155);
+  module.exports = __webpack_require__(156);
 }
 
 
 /***/ }),
-/* 155 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34219,19 +34219,19 @@ exports.unstable_wrapCallback = unstable_wrapCallback;
 
 
 /***/ }),
-/* 156 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 if (false) {} else {
-  module.exports = __webpack_require__(157);
+  module.exports = __webpack_require__(158);
 }
 
 
 /***/ }),
-/* 157 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34587,26 +34587,26 @@ exports.unstable_wrap = unstable_wrap;
 
 
 /***/ }),
-/* 158 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var ClearButton, ColorPickers, ColorWell, DOM, Picker, React, UndoRedoButtons, ZoomButtons, _, createReactClass;
 
-React = __webpack_require__(138);
+React = __webpack_require__(139);
 
-DOM = __webpack_require__(159);
+DOM = __webpack_require__(160);
 
-createReactClass = __webpack_require__(144);
+createReactClass = __webpack_require__(145);
 
-ClearButton = React.createFactory(__webpack_require__(161));
+ClearButton = React.createFactory(__webpack_require__(162));
 
-UndoRedoButtons = React.createFactory(__webpack_require__(163));
+UndoRedoButtons = React.createFactory(__webpack_require__(164));
 
-ZoomButtons = React.createFactory(__webpack_require__(164));
+ZoomButtons = React.createFactory(__webpack_require__(165));
 
-_ = __webpack_require__(136)._;
+_ = __webpack_require__(137)._;
 
-ColorWell = React.createFactory(__webpack_require__(165));
+ColorWell = React.createFactory(__webpack_require__(166));
 
 ColorPickers = React.createFactory(createReactClass({
   displayName: 'ColorPickers',
@@ -34694,20 +34694,20 @@ module.exports = Picker;
 
 
 /***/ }),
-/* 159 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var DOM, React;
 
 try {
-  DOM = __webpack_require__(160);
+  DOM = __webpack_require__(161);
 } catch (error) {
   DOM = window.ReactDOMFactories;
 }
 
 if (DOM == null) {
   try {
-    React = __webpack_require__(139);
+    React = __webpack_require__(140);
     DOM = React.DOM;
   } catch (error) {
     DOM = window.React.DOM;
@@ -34722,7 +34722,7 @@ module.exports = DOM;
 
 
 /***/ }),
-/* 160 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -34737,7 +34737,7 @@ module.exports = DOM;
 
 (function(f) {
   if (true) {
-    module.exports = f(__webpack_require__(139));
+    module.exports = f(__webpack_require__(140));
     /* global define */
   } else { var g; }
 })(function(React) {
@@ -34905,20 +34905,20 @@ module.exports = DOM;
 
 
 /***/ }),
-/* 161 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var ClearButton, DOM, _, classSet, createReactClass, createSetStateOnEventMixin;
 
-DOM = __webpack_require__(159);
+DOM = __webpack_require__(160);
 
-createReactClass = __webpack_require__(144);
+createReactClass = __webpack_require__(145);
 
-createSetStateOnEventMixin = __webpack_require__(162);
+createSetStateOnEventMixin = __webpack_require__(163);
 
-_ = __webpack_require__(136)._;
+_ = __webpack_require__(137)._;
 
-classSet = __webpack_require__(117).classSet;
+classSet = __webpack_require__(118).classSet;
 
 ClearButton = createReactClass({
   displayName: 'ClearButton',
@@ -34957,12 +34957,12 @@ module.exports = ClearButton;
 
 
 /***/ }),
-/* 162 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var React, createSetStateOnEventMixin;
 
-React = __webpack_require__(138);
+React = __webpack_require__(139);
 
 module.exports = createSetStateOnEventMixin = function(eventName) {
   return {
@@ -34981,20 +34981,20 @@ module.exports = createSetStateOnEventMixin = function(eventName) {
 
 
 /***/ }),
-/* 163 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var DOM, React, RedoButton, UndoButton, UndoRedoButtons, classSet, createReactClass, createSetStateOnEventMixin, createUndoRedoButtonComponent;
 
-React = __webpack_require__(138);
+React = __webpack_require__(139);
 
-DOM = __webpack_require__(159);
+DOM = __webpack_require__(160);
 
-createReactClass = __webpack_require__(144);
+createReactClass = __webpack_require__(145);
 
-createSetStateOnEventMixin = __webpack_require__(162);
+createSetStateOnEventMixin = __webpack_require__(163);
 
-classSet = __webpack_require__(117).classSet;
+classSet = __webpack_require__(118).classSet;
 
 createUndoRedoButtonComponent = function(undoOrRedo) {
   return createReactClass({
@@ -35072,20 +35072,20 @@ module.exports = UndoRedoButtons;
 
 
 /***/ }),
-/* 164 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var DOM, React, ZoomButtons, ZoomInButton, ZoomOutButton, classSet, createReactClass, createSetStateOnEventMixin, createZoomButtonComponent;
 
-React = __webpack_require__(138);
+React = __webpack_require__(139);
 
-DOM = __webpack_require__(159);
+DOM = __webpack_require__(160);
 
-createReactClass = __webpack_require__(144);
+createReactClass = __webpack_require__(145);
 
-createSetStateOnEventMixin = __webpack_require__(162);
+createSetStateOnEventMixin = __webpack_require__(163);
 
-classSet = __webpack_require__(117).classSet;
+classSet = __webpack_require__(118).classSet;
 
 createZoomButtonComponent = function(inOrOut) {
   return createReactClass({
@@ -35163,22 +35163,22 @@ module.exports = ZoomButtons;
 
 
 /***/ }),
-/* 165 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var ColorGrid, ColorWell, DOM, PureRenderMixin, React, _, cancelAnimationFrame, classSet, createReactClass, getHSLAString, getHSLString, parseHSLAString, ref, requestAnimationFrame;
 
-React = __webpack_require__(138);
+React = __webpack_require__(139);
 
-DOM = __webpack_require__(159);
+DOM = __webpack_require__(160);
 
-createReactClass = __webpack_require__(144);
+createReactClass = __webpack_require__(145);
 
-PureRenderMixin = __webpack_require__(166);
+PureRenderMixin = __webpack_require__(167);
 
-ref = __webpack_require__(117), classSet = ref.classSet, requestAnimationFrame = ref.requestAnimationFrame, cancelAnimationFrame = ref.cancelAnimationFrame;
+ref = __webpack_require__(118), classSet = ref.classSet, requestAnimationFrame = ref.requestAnimationFrame, cancelAnimationFrame = ref.cancelAnimationFrame;
 
-_ = __webpack_require__(136)._;
+_ = __webpack_require__(137)._;
 
 parseHSLAString = function(s) {
   var components, firstParen, insideParens, lastParen;
@@ -35539,7 +35539,7 @@ module.exports = ColorWell;
 
 
 /***/ }),
-/* 166 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35553,7 +35553,7 @@ module.exports = ColorWell;
 
 
 
-var shallowEqual = __webpack_require__(167);
+var shallowEqual = __webpack_require__(168);
 
 module.exports = {
   shouldComponentUpdate: function(nextProps, nextState) {
@@ -35566,7 +35566,7 @@ module.exports = {
 
 
 /***/ }),
-/* 167 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35637,18 +35637,18 @@ function shallowEqual(objA, objB) {
 module.exports = shallowEqual;
 
 /***/ }),
-/* 168 */
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var DOM, Options, createReactClass, createSetStateOnEventMixin, optionsStyles;
 
-DOM = __webpack_require__(159);
+DOM = __webpack_require__(160);
 
-createReactClass = __webpack_require__(144);
+createReactClass = __webpack_require__(145);
 
-createSetStateOnEventMixin = __webpack_require__(162);
+createSetStateOnEventMixin = __webpack_require__(163);
 
-optionsStyles = __webpack_require__(169).optionsStyles;
+optionsStyles = __webpack_require__(170).optionsStyles;
 
 Options = createReactClass({
   displayName: 'Options',
@@ -35685,12 +35685,12 @@ module.exports = Options;
 
 
 /***/ }),
-/* 169 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var React, defineOptionsStyle, optionsStyles;
 
-React = __webpack_require__(138);
+React = __webpack_require__(139);
 
 optionsStyles = {};
 
@@ -35705,20 +35705,20 @@ module.exports = {
 
 
 /***/ }),
-/* 170 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var DOM, React, _, classSet, createReactClass, createToolButton;
 
-React = __webpack_require__(138);
+React = __webpack_require__(139);
 
-DOM = __webpack_require__(159);
+DOM = __webpack_require__(160);
 
-createReactClass = __webpack_require__(144);
+createReactClass = __webpack_require__(145);
 
-classSet = __webpack_require__(117).classSet;
+classSet = __webpack_require__(118).classSet;
 
-_ = __webpack_require__(136)._;
+_ = __webpack_require__(137)._;
 
 createToolButton = function(tool) {
   var displayName, imageName;
@@ -35766,18 +35766,18 @@ module.exports = createToolButton;
 
 
 /***/ }),
-/* 171 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var ALL_FONTS, DOM, FONT_NAME_TO_VALUE, MONOSPACE_FONTS, OTHER_FONTS, SANS_SERIF_FONTS, SERIF_FONTS, _, createReactClass, defineOptionsStyle, i, j, l, len, len1, len2, len3, m, name, ref, ref1, ref2, ref3, value;
 
-DOM = __webpack_require__(159);
+DOM = __webpack_require__(160);
 
-createReactClass = __webpack_require__(144);
+createReactClass = __webpack_require__(145);
 
-defineOptionsStyle = __webpack_require__(169).defineOptionsStyle;
+defineOptionsStyle = __webpack_require__(170).defineOptionsStyle;
 
-_ = __webpack_require__(136)._;
+_ = __webpack_require__(137)._;
 
 SANS_SERIF_FONTS = [['Arial', 'Arial,"Helvetica Neue",Helvetica,sans-serif'], ['Arial Black', '"Arial Black","Arial Bold",Gadget,sans-serif'], ['Arial Narrow', '"Arial Narrow",Arial,sans-serif'], ['Gill Sans', '"Gill Sans","Gill Sans MT",Calibri,sans-serif'], ['Helvetica', '"Helvetica Neue",Helvetica,Arial,sans-serif'], ['Impact', 'Impact,Haettenschweiler,"Franklin Gothic Bold",Charcoal,"Helvetica Inserat","Bitstream Vera Sans Bold","Arial Black",sans-serif'], ['Tahoma', 'Tahoma,Verdana,Segoe,sans-serif'], ['Trebuchet MS', '"Trebuchet MS","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Tahoma,sans-serif'], ['Verdana', 'Verdana,Geneva,sans-serif']].map(function(arg) {
   var name, value;
@@ -35965,14 +35965,14 @@ module.exports = {};
 
 
 /***/ }),
-/* 172 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var StrokeWidthPicker, defineOptionsStyle;
 
-defineOptionsStyle = __webpack_require__(169).defineOptionsStyle;
+defineOptionsStyle = __webpack_require__(170).defineOptionsStyle;
 
-StrokeWidthPicker = __webpack_require__(173);
+StrokeWidthPicker = __webpack_require__(174);
 
 defineOptionsStyle('stroke-width', StrokeWidthPicker);
 
@@ -35980,18 +35980,18 @@ module.exports = {};
 
 
 /***/ }),
-/* 173 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var DOM, classSet, createReactClass, createSetStateOnEventMixin;
 
-DOM = __webpack_require__(159);
+DOM = __webpack_require__(160);
 
-createReactClass = __webpack_require__(144);
+createReactClass = __webpack_require__(145);
 
-createSetStateOnEventMixin = __webpack_require__(162);
+createSetStateOnEventMixin = __webpack_require__(163);
 
-classSet = __webpack_require__(117).classSet;
+classSet = __webpack_require__(118).classSet;
 
 module.exports = createReactClass({
   displayName: 'StrokeWidthPicker',
@@ -36047,24 +36047,24 @@ module.exports = createReactClass({
 
 
 /***/ }),
-/* 174 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var DOM, React, StrokeWidthPicker, classSet, createReactClass, createSetStateOnEventMixin, defineOptionsStyle;
 
-React = __webpack_require__(138);
+React = __webpack_require__(139);
 
-DOM = __webpack_require__(159);
+DOM = __webpack_require__(160);
 
-createReactClass = __webpack_require__(144);
+createReactClass = __webpack_require__(145);
 
-defineOptionsStyle = __webpack_require__(169).defineOptionsStyle;
+defineOptionsStyle = __webpack_require__(170).defineOptionsStyle;
 
-StrokeWidthPicker = React.createFactory(__webpack_require__(173));
+StrokeWidthPicker = React.createFactory(__webpack_require__(174));
 
-createSetStateOnEventMixin = __webpack_require__(162);
+createSetStateOnEventMixin = __webpack_require__(163);
 
-classSet = __webpack_require__(117).classSet;
+classSet = __webpack_require__(118).classSet;
 
 defineOptionsStyle('line-options-and-stroke-width', createReactClass({
   displayName: 'LineOptionsAndStrokeWidth',
@@ -36129,22 +36129,22 @@ module.exports = {};
 
 
 /***/ }),
-/* 175 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var DOM, React, StrokeWidthPicker, createReactClass, createSetStateOnEventMixin, defineOptionsStyle;
 
-React = __webpack_require__(138);
+React = __webpack_require__(139);
 
-DOM = __webpack_require__(159);
+DOM = __webpack_require__(160);
 
-createReactClass = __webpack_require__(144);
+createReactClass = __webpack_require__(145);
 
-defineOptionsStyle = __webpack_require__(169).defineOptionsStyle;
+defineOptionsStyle = __webpack_require__(170).defineOptionsStyle;
 
-StrokeWidthPicker = React.createFactory(__webpack_require__(173));
+StrokeWidthPicker = React.createFactory(__webpack_require__(174));
 
-createSetStateOnEventMixin = __webpack_require__(162);
+createSetStateOnEventMixin = __webpack_require__(163);
 
 defineOptionsStyle('polygon-and-stroke-width', createReactClass({
   displayName: 'PolygonAndStrokeWidth',
@@ -36248,16 +36248,16 @@ module.exports = {};
 
 
 /***/ }),
-/* 176 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var DOM, createReactClass, defineOptionsStyle;
 
-DOM = __webpack_require__(159);
+DOM = __webpack_require__(160);
 
-createReactClass = __webpack_require__(144);
+createReactClass = __webpack_require__(145);
 
-defineOptionsStyle = __webpack_require__(169).defineOptionsStyle;
+defineOptionsStyle = __webpack_require__(170).defineOptionsStyle;
 
 defineOptionsStyle('null', createReactClass({
   displayName: 'NoOptions',
@@ -36270,16 +36270,16 @@ module.exports = {};
 
 
 /***/ }),
-/* 177 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var React = __webpack_require__(138);
-var ReactDOM = __webpack_require__(151);
-var LiterallyCanvasModel = __webpack_require__(112);
-var LiterallyCanvasReactComponent = __webpack_require__(137);
+var React = __webpack_require__(139);
+var ReactDOM = __webpack_require__(152);
+var LiterallyCanvasModel = __webpack_require__(113);
+var LiterallyCanvasReactComponent = __webpack_require__(138);
 
 function init(el, opts) {
   var originalClassName = el.className;
@@ -36298,20 +36298,20 @@ function init(el, opts) {
 module.exports = init;
 
 /***/ }),
-/* 178 */
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var createReactClass = __webpack_require__(144);
-var React = __webpack_require__(138);
+var createReactClass = __webpack_require__(145);
+var React = __webpack_require__(139);
 
-var _require = __webpack_require__(169),
+var _require = __webpack_require__(170),
     defineOptionsStyle = _require.defineOptionsStyle;
 
-var createSetStateOnEventMixin = __webpack_require__(162);
-var _ = __webpack_require__(136)._;
+var createSetStateOnEventMixin = __webpack_require__(163);
+var _ = __webpack_require__(137)._;
 
 defineOptionsStyle('stroke-or-fill', createReactClass({
   displayName: 'StrokeOrFillPicker',
@@ -36378,18 +36378,18 @@ defineOptionsStyle('stroke-or-fill', createReactClass({
 module.exports = {};
 
 /***/ }),
-/* 179 */
+/* 180 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var SelectShape, Tool, actions, createShape,
   extend = function(child, parent) { for (var key in parent) { if (hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
   hasProp = {}.hasOwnProperty;
 
-actions = __webpack_require__(113);
+actions = __webpack_require__(114);
 
-Tool = __webpack_require__(126).Tool;
+Tool = __webpack_require__(127).Tool;
 
-createShape = __webpack_require__(116).createShape;
+createShape = __webpack_require__(117).createShape;
 
 module.exports = SelectShape = (function(superClass) {
   extend(SelectShape, superClass);

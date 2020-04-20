@@ -250,7 +250,7 @@ $(document).ready(function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _editor_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _collaboration_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(108);
+/* harmony import */ var _collaboration_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(109);
 /* harmony import */ var _nextcloud_event_bus__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(3);
 /* harmony import */ var _nextcloud_event_bus__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_nextcloud_event_bus__WEBPACK_IMPORTED_MODULE_2__);
 /**
@@ -403,7 +403,7 @@ __webpack_require__.r(__webpack_exports__);
         // local changes => send to Engine
         Object(_nextcloud_event_bus__WEBPACK_IMPORTED_MODULE_2__["subscribe"])(this.APP_NAME+"::editorAddStep",this.EDS = (data) => {
             self.CE.sendStep(data).then(function(){
-                console.log("CE: sendingStep Done",data) ;
+                //console.log("CE: sendingStep Done",data) ;
             }) ;
         }) ;
 
@@ -490,7 +490,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     
     init: function () {
-        return __webpack_require__.e(/* import() | literallycanvas */ 1).then(__webpack_require__.t.bind(null, 109, 7)).then(LC => {
+        return __webpack_require__.e(/* import() | literallycanvas */ 1).then(__webpack_require__.t.bind(null, 110, 7)).then(LC => {
             this.LC = LC ;
             this.whiteboard = LC.init(
                     document.getElementById(this.app_name+'-editor'),
@@ -513,8 +513,10 @@ __webpack_require__.r(__webpack_exports__);
             url: url,
             data: {path: this.context.dir + "/" + this.filename }
         }).done(function(content){
-            console.log("Loading WB ...") ;
-            self.whiteboard.loadSnapshot(JSON.parse(content)) ;
+            //console.log("WB : loaded") ;
+            if (content.trim() != "" ) {
+                self.whiteboard.loadSnapshot(JSON.parse(content)) ;
+            } ;
         }) ;
     },
 
@@ -535,7 +537,7 @@ __webpack_require__.r(__webpack_exports__);
             url: url,
             data: postObject
         }).done(function(content){
-            console.log("Whiteboard Saved") ;
+            OC.Notification.showTemporary("File saved") ;
             var payload = {
                 'type' : 'save',
                 'step' : 'NA'
@@ -575,9 +577,10 @@ __webpack_require__.r(__webpack_exports__);
     },
 
     applyChange: function(step) {
-        switch (step.type) {
+        switch (step.stepType) {
             case 'shapeSave':
-                    this.whiteboard.saveShape(this.LC.JSONToShape(step.data),false) ;
+                    var shapeStep = this.LC.JSONToShape(JSON.parse(step.stepData)) ;
+                    this.whiteboard.saveShape(shapeStep,false) ;
                 break ;
             default: console.warn("unknown step type")
         }
@@ -681,7 +684,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var packageJson = {
   name: "@nextcloud/event-bus",
-  version: "1.1.2",
+  version: "1.1.4",
   description: "",
   main: "dist/index.js",
   types: "dist/index.d.ts",
@@ -702,7 +705,7 @@ var packageJson = {
     url: "https://github.com/nextcloud/nextcloud-event-bus"
   },
   dependencies: {
-    "@types/semver": "^6.2.0",
+    "@types/semver": "^6.2.1",
     "core-js": "^3.6.2",
     semver: "^6.3.0"
   },
@@ -713,18 +716,16 @@ var packageJson = {
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-typescript": "^7.6.0",
     "@nextcloud/browserslist-config": "^1.0.0",
-    "babel-jest": "^24.9.0",
+    "babel-jest": "^25.1.0",
     "babel-plugin-inline-json-import": "^0.3.2",
-    jest: "^24.9.0",
-    typedoc: "^0.15.7",
+    jest: "^25.1.0",
+    typedoc: "^0.17.2",
     typescript: "^3.6.3"
   },
   browserslist: ["extends @nextcloud/browserslist-config"]
 };
 
-var ProxyBus =
-/*#__PURE__*/
-function () {
+var ProxyBus = /*#__PURE__*/function () {
   function ProxyBus(bus) {
     _classCallCheck(this, ProxyBus);
 
@@ -2573,15 +2574,17 @@ __webpack_require__(63);
 
 __webpack_require__(68);
 
-__webpack_require__(83);
+__webpack_require__(71);
 
-__webpack_require__(99);
+__webpack_require__(86);
 
-__webpack_require__(101);
+__webpack_require__(102);
 
-__webpack_require__(103);
+__webpack_require__(104);
 
-__webpack_require__(107);
+__webpack_require__(106);
+
+__webpack_require__(108);
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -2598,7 +2601,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var packageJson = {
   name: "@nextcloud/event-bus",
-  version: "1.1.2",
+  version: "1.1.4",
   description: "",
   main: "dist/index.js",
   types: "dist/index.d.ts",
@@ -2619,7 +2622,7 @@ var packageJson = {
     url: "https://github.com/nextcloud/nextcloud-event-bus"
   },
   dependencies: {
-    "@types/semver": "^6.2.0",
+    "@types/semver": "^6.2.1",
     "core-js": "^3.6.2",
     semver: "^6.3.0"
   },
@@ -2630,18 +2633,16 @@ var packageJson = {
     "@babel/preset-env": "^7.6.0",
     "@babel/preset-typescript": "^7.6.0",
     "@nextcloud/browserslist-config": "^1.0.0",
-    "babel-jest": "^24.9.0",
+    "babel-jest": "^25.1.0",
     "babel-plugin-inline-json-import": "^0.3.2",
-    jest: "^24.9.0",
-    typedoc: "^0.15.7",
+    jest: "^25.1.0",
+    typedoc: "^0.17.2",
     typescript: "^3.6.3"
   },
   browserslist: ["extends @nextcloud/browserslist-config"]
 };
 
-var SimpleBus =
-/*#__PURE__*/
-function () {
+var SimpleBus = /*#__PURE__*/function () {
   function SimpleBus() {
     _classCallCheck(this, SimpleBus);
 
@@ -3314,7 +3315,7 @@ var store = __webpack_require__(32);
 (module.exports = function (key, value) {
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
-  version: '3.6.4',
+  version: '3.6.5',
   mode: IS_PURE ? 'pure' : 'global',
   copyright: '© 2020 Denis Pushkarev (zloirock.ru)'
 });
@@ -3937,11 +3938,64 @@ module.exports = function (METHOD_NAME, options) {
 
 "use strict";
 
+var $ = __webpack_require__(9);
+var forEach = __webpack_require__(69);
+
+// `Array.prototype.forEach` method
+// https://tc39.github.io/ecma262/#sec-array.prototype.foreach
+$({ target: 'Array', proto: true, forced: [].forEach != forEach }, {
+  forEach: forEach
+});
+
+
+/***/ }),
+/* 69 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $forEach = __webpack_require__(64).forEach;
+var arrayMethodIsStrict = __webpack_require__(70);
+var arrayMethodUsesToLength = __webpack_require__(67);
+
+var STRICT_METHOD = arrayMethodIsStrict('forEach');
+var USES_TO_LENGTH = arrayMethodUsesToLength('forEach');
+
+// `Array.prototype.forEach` method implementation
+// https://tc39.github.io/ecma262/#sec-array.prototype.foreach
+module.exports = (!STRICT_METHOD || !USES_TO_LENGTH) ? function forEach(callbackfn /* , thisArg */) {
+  return $forEach(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
+} : [].forEach;
+
+
+/***/ }),
+/* 70 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var fails = __webpack_require__(14);
+
+module.exports = function (METHOD_NAME, argument) {
+  var method = [][METHOD_NAME];
+  return !!method && fails(function () {
+    // eslint-disable-next-line no-useless-call,no-throw-literal
+    method.call(null, argument || function () { throw 1; }, 1);
+  });
+};
+
+
+/***/ }),
+/* 71 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 var toIndexedObject = __webpack_require__(17);
-var addToUnscopables = __webpack_require__(69);
-var Iterators = __webpack_require__(74);
+var addToUnscopables = __webpack_require__(72);
+var Iterators = __webpack_require__(77);
 var InternalStateModule = __webpack_require__(33);
-var defineIterator = __webpack_require__(75);
+var defineIterator = __webpack_require__(78);
 
 var ARRAY_ITERATOR = 'Array Iterator';
 var setInternalState = InternalStateModule.set;
@@ -3992,11 +4046,11 @@ addToUnscopables('entries');
 
 
 /***/ }),
-/* 69 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var wellKnownSymbol = __webpack_require__(57);
-var create = __webpack_require__(70);
+var create = __webpack_require__(73);
 var definePropertyModule = __webpack_require__(27);
 
 var UNSCOPABLES = wellKnownSymbol('unscopables');
@@ -4018,14 +4072,14 @@ module.exports = function (key) {
 
 
 /***/ }),
-/* 70 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var anObject = __webpack_require__(28);
-var defineProperties = __webpack_require__(71);
+var defineProperties = __webpack_require__(74);
 var enumBugKeys = __webpack_require__(50);
 var hiddenKeys = __webpack_require__(39);
-var html = __webpack_require__(73);
+var html = __webpack_require__(76);
 var documentCreateElement = __webpack_require__(25);
 var sharedKey = __webpack_require__(35);
 
@@ -4102,13 +4156,13 @@ module.exports = Object.create || function create(O, Properties) {
 
 
 /***/ }),
-/* 71 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var DESCRIPTORS = __webpack_require__(13);
 var definePropertyModule = __webpack_require__(27);
 var anObject = __webpack_require__(28);
-var objectKeys = __webpack_require__(72);
+var objectKeys = __webpack_require__(75);
 
 // `Object.defineProperties` method
 // https://tc39.github.io/ecma262/#sec-object.defineproperties
@@ -4124,7 +4178,7 @@ module.exports = DESCRIPTORS ? Object.defineProperties : function defineProperti
 
 
 /***/ }),
-/* 72 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var internalObjectKeys = __webpack_require__(45);
@@ -4138,7 +4192,7 @@ module.exports = Object.keys || function keys(O) {
 
 
 /***/ }),
-/* 73 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var getBuiltIn = __webpack_require__(42);
@@ -4147,29 +4201,29 @@ module.exports = getBuiltIn('document', 'documentElement');
 
 
 /***/ }),
-/* 74 */
+/* 77 */
 /***/ (function(module, exports) {
 
 module.exports = {};
 
 
 /***/ }),
-/* 75 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var $ = __webpack_require__(9);
-var createIteratorConstructor = __webpack_require__(76);
-var getPrototypeOf = __webpack_require__(78);
-var setPrototypeOf = __webpack_require__(81);
-var setToStringTag = __webpack_require__(80);
+var createIteratorConstructor = __webpack_require__(79);
+var getPrototypeOf = __webpack_require__(81);
+var setPrototypeOf = __webpack_require__(84);
+var setToStringTag = __webpack_require__(83);
 var createNonEnumerableProperty = __webpack_require__(26);
 var redefine = __webpack_require__(29);
 var wellKnownSymbol = __webpack_require__(57);
 var IS_PURE = __webpack_require__(37);
-var Iterators = __webpack_require__(74);
-var IteratorsCore = __webpack_require__(77);
+var Iterators = __webpack_require__(77);
+var IteratorsCore = __webpack_require__(80);
 
 var IteratorPrototype = IteratorsCore.IteratorPrototype;
 var BUGGY_SAFARI_ITERATORS = IteratorsCore.BUGGY_SAFARI_ITERATORS;
@@ -4251,16 +4305,16 @@ module.exports = function (Iterable, NAME, IteratorConstructor, next, DEFAULT, I
 
 
 /***/ }),
-/* 76 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var IteratorPrototype = __webpack_require__(77).IteratorPrototype;
-var create = __webpack_require__(70);
+var IteratorPrototype = __webpack_require__(80).IteratorPrototype;
+var create = __webpack_require__(73);
 var createPropertyDescriptor = __webpack_require__(16);
-var setToStringTag = __webpack_require__(80);
-var Iterators = __webpack_require__(74);
+var setToStringTag = __webpack_require__(83);
+var Iterators = __webpack_require__(77);
 
 var returnThis = function () { return this; };
 
@@ -4274,12 +4328,12 @@ module.exports = function (IteratorConstructor, NAME, next) {
 
 
 /***/ }),
-/* 77 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var getPrototypeOf = __webpack_require__(78);
+var getPrototypeOf = __webpack_require__(81);
 var createNonEnumerableProperty = __webpack_require__(26);
 var has = __webpack_require__(23);
 var wellKnownSymbol = __webpack_require__(57);
@@ -4318,13 +4372,13 @@ module.exports = {
 
 
 /***/ }),
-/* 78 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var has = __webpack_require__(23);
 var toObject = __webpack_require__(54);
 var sharedKey = __webpack_require__(35);
-var CORRECT_PROTOTYPE_GETTER = __webpack_require__(79);
+var CORRECT_PROTOTYPE_GETTER = __webpack_require__(82);
 
 var IE_PROTO = sharedKey('IE_PROTO');
 var ObjectPrototype = Object.prototype;
@@ -4341,7 +4395,7 @@ module.exports = CORRECT_PROTOTYPE_GETTER ? Object.getPrototypeOf : function (O)
 
 
 /***/ }),
-/* 79 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var fails = __webpack_require__(14);
@@ -4354,7 +4408,7 @@ module.exports = !fails(function () {
 
 
 /***/ }),
-/* 80 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var defineProperty = __webpack_require__(27).f;
@@ -4371,11 +4425,11 @@ module.exports = function (it, TAG, STATIC) {
 
 
 /***/ }),
-/* 81 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var anObject = __webpack_require__(28);
-var aPossiblePrototype = __webpack_require__(82);
+var aPossiblePrototype = __webpack_require__(85);
 
 // `Object.setPrototypeOf` method
 // https://tc39.github.io/ecma262/#sec-object.setprototypeof
@@ -4401,7 +4455,7 @@ module.exports = Object.setPrototypeOf || ('__proto__' in {} ? function () {
 
 
 /***/ }),
-/* 82 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(22);
@@ -4414,13 +4468,13 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 83 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var collection = __webpack_require__(84);
-var collectionStrong = __webpack_require__(96);
+var collection = __webpack_require__(87);
+var collectionStrong = __webpack_require__(99);
 
 // `Map` constructor
 // https://tc39.github.io/ecma262/#sec-map-objects
@@ -4430,7 +4484,7 @@ module.exports = collection('Map', function (init) {
 
 
 /***/ }),
-/* 84 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4439,14 +4493,14 @@ var $ = __webpack_require__(9);
 var global = __webpack_require__(10);
 var isForced = __webpack_require__(52);
 var redefine = __webpack_require__(29);
-var InternalMetadataModule = __webpack_require__(85);
-var iterate = __webpack_require__(87);
-var anInstance = __webpack_require__(93);
+var InternalMetadataModule = __webpack_require__(88);
+var iterate = __webpack_require__(90);
+var anInstance = __webpack_require__(96);
 var isObject = __webpack_require__(22);
 var fails = __webpack_require__(14);
-var checkCorrectnessOfIteration = __webpack_require__(94);
-var setToStringTag = __webpack_require__(80);
-var inheritIfRequired = __webpack_require__(95);
+var checkCorrectnessOfIteration = __webpack_require__(97);
+var setToStringTag = __webpack_require__(83);
+var inheritIfRequired = __webpack_require__(98);
 
 module.exports = function (CONSTRUCTOR_NAME, wrapper, common) {
   var IS_MAP = CONSTRUCTOR_NAME.indexOf('Map') !== -1;
@@ -4536,7 +4590,7 @@ module.exports = function (CONSTRUCTOR_NAME, wrapper, common) {
 
 
 /***/ }),
-/* 85 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var hiddenKeys = __webpack_require__(39);
@@ -4544,7 +4598,7 @@ var isObject = __webpack_require__(22);
 var has = __webpack_require__(23);
 var defineProperty = __webpack_require__(27).f;
 var uid = __webpack_require__(38);
-var FREEZING = __webpack_require__(86);
+var FREEZING = __webpack_require__(89);
 
 var METADATA = uid('meta');
 var id = 0;
@@ -4603,7 +4657,7 @@ hiddenKeys[METADATA] = true;
 
 
 /***/ }),
-/* 86 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var fails = __webpack_require__(14);
@@ -4614,15 +4668,15 @@ module.exports = !fails(function () {
 
 
 /***/ }),
-/* 87 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var anObject = __webpack_require__(28);
-var isArrayIteratorMethod = __webpack_require__(88);
+var isArrayIteratorMethod = __webpack_require__(91);
 var toLength = __webpack_require__(47);
 var bind = __webpack_require__(65);
-var getIteratorMethod = __webpack_require__(89);
-var callWithSafeIterationClosing = __webpack_require__(92);
+var getIteratorMethod = __webpack_require__(92);
+var callWithSafeIterationClosing = __webpack_require__(95);
 
 var Result = function (stopped, result) {
   this.stopped = stopped;
@@ -4663,11 +4717,11 @@ iterate.stop = function (result) {
 
 
 /***/ }),
-/* 88 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var wellKnownSymbol = __webpack_require__(57);
-var Iterators = __webpack_require__(74);
+var Iterators = __webpack_require__(77);
 
 var ITERATOR = wellKnownSymbol('iterator');
 var ArrayPrototype = Array.prototype;
@@ -4679,11 +4733,11 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 89 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var classof = __webpack_require__(90);
-var Iterators = __webpack_require__(74);
+var classof = __webpack_require__(93);
+var Iterators = __webpack_require__(77);
 var wellKnownSymbol = __webpack_require__(57);
 
 var ITERATOR = wellKnownSymbol('iterator');
@@ -4696,10 +4750,10 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 90 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var TO_STRING_TAG_SUPPORT = __webpack_require__(91);
+var TO_STRING_TAG_SUPPORT = __webpack_require__(94);
 var classofRaw = __webpack_require__(19);
 var wellKnownSymbol = __webpack_require__(57);
 
@@ -4728,7 +4782,7 @@ module.exports = TO_STRING_TAG_SUPPORT ? classofRaw : function (it) {
 
 
 /***/ }),
-/* 91 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var wellKnownSymbol = __webpack_require__(57);
@@ -4742,7 +4796,7 @@ module.exports = String(test) === '[object z]';
 
 
 /***/ }),
-/* 92 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var anObject = __webpack_require__(28);
@@ -4761,7 +4815,7 @@ module.exports = function (iterator, fn, value, ENTRIES) {
 
 
 /***/ }),
-/* 93 */
+/* 96 */
 /***/ (function(module, exports) {
 
 module.exports = function (it, Constructor, name) {
@@ -4772,7 +4826,7 @@ module.exports = function (it, Constructor, name) {
 
 
 /***/ }),
-/* 94 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var wellKnownSymbol = __webpack_require__(57);
@@ -4816,11 +4870,11 @@ module.exports = function (exec, SKIP_CLOSING) {
 
 
 /***/ }),
-/* 95 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(22);
-var setPrototypeOf = __webpack_require__(81);
+var setPrototypeOf = __webpack_require__(84);
 
 // makes subclassing work correct for wrapped built-ins
 module.exports = function ($this, dummy, Wrapper) {
@@ -4839,21 +4893,21 @@ module.exports = function ($this, dummy, Wrapper) {
 
 
 /***/ }),
-/* 96 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var defineProperty = __webpack_require__(27).f;
-var create = __webpack_require__(70);
-var redefineAll = __webpack_require__(97);
+var create = __webpack_require__(73);
+var redefineAll = __webpack_require__(100);
 var bind = __webpack_require__(65);
-var anInstance = __webpack_require__(93);
-var iterate = __webpack_require__(87);
-var defineIterator = __webpack_require__(75);
-var setSpecies = __webpack_require__(98);
+var anInstance = __webpack_require__(96);
+var iterate = __webpack_require__(90);
+var defineIterator = __webpack_require__(78);
+var setSpecies = __webpack_require__(101);
 var DESCRIPTORS = __webpack_require__(13);
-var fastKey = __webpack_require__(85).fastKey;
+var fastKey = __webpack_require__(88).fastKey;
 var InternalStateModule = __webpack_require__(33);
 
 var setInternalState = InternalStateModule.set;
@@ -5032,7 +5086,7 @@ module.exports = {
 
 
 /***/ }),
-/* 97 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var redefine = __webpack_require__(29);
@@ -5044,7 +5098,7 @@ module.exports = function (target, src, options) {
 
 
 /***/ }),
-/* 98 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5070,12 +5124,12 @@ module.exports = function (CONSTRUCTOR_NAME) {
 
 
 /***/ }),
-/* 99 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var TO_STRING_TAG_SUPPORT = __webpack_require__(91);
+var TO_STRING_TAG_SUPPORT = __webpack_require__(94);
 var redefine = __webpack_require__(29);
-var toString = __webpack_require__(100);
+var toString = __webpack_require__(103);
 
 // `Object.prototype.toString` method
 // https://tc39.github.io/ecma262/#sec-object.prototype.tostring
@@ -5085,13 +5139,13 @@ if (!TO_STRING_TAG_SUPPORT) {
 
 
 /***/ }),
-/* 100 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var TO_STRING_TAG_SUPPORT = __webpack_require__(91);
-var classof = __webpack_require__(90);
+var TO_STRING_TAG_SUPPORT = __webpack_require__(94);
+var classof = __webpack_require__(93);
 
 // `Object.prototype.toString` method implementation
 // https://tc39.github.io/ecma262/#sec-object.prototype.tostring
@@ -5101,14 +5155,14 @@ module.exports = TO_STRING_TAG_SUPPORT ? {}.toString : function toString() {
 
 
 /***/ }),
-/* 101 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var charAt = __webpack_require__(102).charAt;
+var charAt = __webpack_require__(105).charAt;
 var InternalStateModule = __webpack_require__(33);
-var defineIterator = __webpack_require__(75);
+var defineIterator = __webpack_require__(78);
 
 var STRING_ITERATOR = 'String Iterator';
 var setInternalState = InternalStateModule.set;
@@ -5137,7 +5191,7 @@ defineIterator(String, 'String', function (iterated) {
 
 
 /***/ }),
-/* 102 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var toInteger = __webpack_require__(48);
@@ -5170,12 +5224,12 @@ module.exports = {
 
 
 /***/ }),
-/* 103 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var global = __webpack_require__(10);
-var DOMIterables = __webpack_require__(104);
-var forEach = __webpack_require__(105);
+var DOMIterables = __webpack_require__(107);
+var forEach = __webpack_require__(69);
 var createNonEnumerableProperty = __webpack_require__(26);
 
 for (var COLLECTION_NAME in DOMIterables) {
@@ -5191,7 +5245,7 @@ for (var COLLECTION_NAME in DOMIterables) {
 
 
 /***/ }),
-/* 104 */
+/* 107 */
 /***/ (function(module, exports) {
 
 // iterable DOM collections
@@ -5232,49 +5286,12 @@ module.exports = {
 
 
 /***/ }),
-/* 105 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var $forEach = __webpack_require__(64).forEach;
-var arrayMethodIsStrict = __webpack_require__(106);
-var arrayMethodUsesToLength = __webpack_require__(67);
-
-var STRICT_METHOD = arrayMethodIsStrict('forEach');
-var USES_TO_LENGTH = arrayMethodUsesToLength('forEach');
-
-// `Array.prototype.forEach` method implementation
-// https://tc39.github.io/ecma262/#sec-array.prototype.foreach
-module.exports = (!STRICT_METHOD || !USES_TO_LENGTH) ? function forEach(callbackfn /* , thisArg */) {
-  return $forEach(this, callbackfn, arguments.length > 1 ? arguments[1] : undefined);
-} : [].forEach;
-
-
-/***/ }),
-/* 106 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var fails = __webpack_require__(14);
-
-module.exports = function (METHOD_NAME, argument) {
-  var method = [][METHOD_NAME];
-  return !!method && fails(function () {
-    // eslint-disable-next-line no-useless-call,no-throw-literal
-    method.call(null, argument || function () { throw 1; }, 1);
-  });
-};
-
-
-/***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var global = __webpack_require__(10);
-var DOMIterables = __webpack_require__(104);
-var ArrayIteratorMethods = __webpack_require__(68);
+var DOMIterables = __webpack_require__(107);
+var ArrayIteratorMethods = __webpack_require__(71);
 var createNonEnumerableProperty = __webpack_require__(26);
 var wellKnownSymbol = __webpack_require__(57);
 
@@ -5308,7 +5325,7 @@ for (var COLLECTION_NAME in DOMIterables) {
 
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5355,23 +5372,27 @@ __webpack_require__.r(__webpack_exports__);
         this.SSE_OPT = {withCredentials:true} ;
 
         this.init().then(function(data) {
-            console.log("Collaboration started for "+ self.app_name) ;
+            console.log("CE : Collaboration started for "+ self.app_name) ;
             self.addUser() ;
 
             // because we may arrive in an allready running session
             // get all steps from last last save 
-            self.getSteps(0,true).then(function(steps){
+            self.getSteps().then(function(steps){
                 steps.forEach(step => Object(_nextcloud_event_bus__WEBPACK_IMPORTED_MODULE_0__["emit"])(self.app_name+"::externalAddStep",step)) ;
             })
             
             // start pulling for change
-            self.startCommunication() ;
+            self.communicationStarted = true ;
+            console.log("CE : starting communication ") ; 
+            self.startCommunication() ;        
         });
         
     },
 
     stop: function() {
         this.removeUser() ;
+        this.stopCommunication() ;
+        console.log("CE : Collaboration stopped for "+ this.app_name) ;
     },
 
     init: function() {
@@ -5388,7 +5409,7 @@ __webpack_require__.r(__webpack_exports__);
 
     addUser: function() {
         var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/adduser');
-        console.log("Adding user " + OC.currentUser ) ;
+        console.log("CE : Adding user " + OC.currentUser ) ;
 
         var ajx = $.ajax({
             type: 'POST',
@@ -5402,7 +5423,7 @@ __webpack_require__.r(__webpack_exports__);
 
     removeUser: function() {
         var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/removeuser');
-        console.log("Removing user " + OC.currentUser ) ;
+        console.log("CE : Removing user " + OC.currentUser ) ;
 
         var ajx = $.ajax({
             type: 'POST',
@@ -5417,33 +5438,29 @@ __webpack_require__.r(__webpack_exports__);
     sendStep: function(payload) {
 
         var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/addstep');
-
+        console.log("CE : Sending ",payload.type," step"  ) ;
         var ajx = $.ajax({
             type: 'POST',
-            contentType: "application/json",
-            dataType: "json",
             url: url,
-            data: JSON.stringify({id: this.id,
+            data: {id: this.id,
                    user: OC.currentUser,
                    type: payload.type,
-                   step: payload.step
-                  })
+                   step: JSON.stringify(payload.step)
+                  }
         }) ;
 
         return ajx.promise() ;
 
     },
 
-    getSteps: function(from,handlecheckpoint) {
+    getSteps: function() {
         var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/getsteps');
-        console.log("get initial steps") ;
+        console.log("CE : Getting initial steps") ;
         var ajx = $.ajax({
             type: 'GET',
             url: url,
             data: {
-                   id: this.id,
-                   fromStep: from,
-                   handlecheckpoint: handlecheckpoint
+                   id: this.id
                   }
         }) ;
 
@@ -5451,24 +5468,30 @@ __webpack_require__.r(__webpack_exports__);
     },
 
     startCommunication: function() {
-        this.communicationStarted = true ;
-
-        while (this.communicationStarted = true) {
-            this.longPull().done( function(data){
-                console.log(data) ;
-            })
-        }
-
+        var self = this ;
+ 
+        this.longPull().done(function(steps) {
+            steps.forEach(function (step) {
+                if (step.userId != OC.currentUser) {
+                    Object(_nextcloud_event_bus__WEBPACK_IMPORTED_MODULE_0__["emit"])(self.app_name+"::externalAddStep",step) ;
+                    console.log("CE : A step for me !") ;
+                }  ;
+            }) ;
+            if (self.communicationStarted == true) {
+                self.startCommunication() ;	
+            }
+        })
     },
 
     longPull: function() {
         var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/pushstep');
-        console.log("Starting polling ...") ;
+        console.log("CE : Poll again ...") ;
         var ajx = $.ajax({
             type: 'GET',
             url: url,
             data: {
                    id: this.id,
+                   user: OC.currentUser
                   }
         }) ;
 

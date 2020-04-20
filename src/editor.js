@@ -61,8 +61,10 @@ export default {
             url: url,
             data: {path: this.context.dir + "/" + this.filename }
         }).done(function(content){
-            console.log("Loading WB ...") ;
-            self.whiteboard.loadSnapshot(JSON.parse(content)) ;
+            //console.log("WB : loaded") ;
+            if (content.trim() != "" ) {
+                self.whiteboard.loadSnapshot(JSON.parse(content)) ;
+            } ;
         }) ;
     },
 
@@ -83,7 +85,7 @@ export default {
             url: url,
             data: postObject
         }).done(function(content){
-            console.log("Whiteboard Saved") ;
+            OC.Notification.showTemporary("File saved") ;
             var payload = {
                 'type' : 'save',
                 'step' : 'NA'
@@ -123,9 +125,10 @@ export default {
     },
 
     applyChange: function(step) {
-        switch (step.type) {
+        switch (step.stepType) {
             case 'shapeSave':
-                    this.whiteboard.saveShape(this.LC.JSONToShape(step.data),false) ;
+                    var shapeStep = this.LC.JSONToShape(JSON.parse(step.stepData)) ;
+                    this.whiteboard.saveShape(shapeStep,false) ;
                 break ;
             default: console.warn("unknown step type")
         }

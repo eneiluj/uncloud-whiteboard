@@ -109,6 +109,7 @@ class SimpleFileCollaborationEngine {
             //$step = json_decode($this->cache->get('WhiteboardSession::'.$this->file)) ;
             $step = $this->getLastStep() ;
             $elapsedTime++ ;
+            return $step ;
         } ;
         //remove key from cache 
         //$this->cache.remove('WhiteboardSession::'.$this->file) ;
@@ -118,7 +119,9 @@ class SimpleFileCollaborationEngine {
     /* Private methods */
 
     private function updateStorage() {
-        return file_put_contents("/tmp/session-".$this->file,json_encode($this->Fsession), LOCK_EX) ;
+        $payload = json_encode($this->Fsession) ;
+        $result = file_put_contents("/tmp/session-".$this->file,$payload) ;
+        return $result ;
     }
 
     private function getUserNumber() {
@@ -130,14 +133,15 @@ class SimpleFileCollaborationEngine {
     }
 
     private function setLastStep($step){
-        file_put_contents("/tmp/session-queue-".$this->file,json_encode($step),FILE_APPEND | LOCK_EX) ;
+        $jstep = json_encode($step) ;
+        file_put_contents("/tmp/session-queue-".$this->file,jstep,FILE_APPEND) ;
     }
 
     private function getLastStep(){
 
-        $steps = file_get_contents("/tmp/session-queue".$this->file) ;
+        $step = file_get_contents("/tmp/session-queue-".$this->file) ;
 
-        return json_decode($steps,true) ;
+        return json_decode($step,true) ;
 
     }
 

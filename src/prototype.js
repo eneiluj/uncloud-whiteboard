@@ -148,7 +148,7 @@ export default {
         // local changes => send to Engine
         subscribe(this.APP_NAME+"::editorAddStep",this.EDS = (data) => {
             self.CE.sendStep(data).then(function(){
-                console.log("CE: sendingStep Done",data) ;
+                //console.log("CE: sendingStep Done",data) ;
             }) ;
         }) ;
 

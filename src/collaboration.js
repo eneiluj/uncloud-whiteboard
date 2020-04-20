@@ -38,23 +38,27 @@ export default {
         this.SSE_OPT = {withCredentials:true} ;
 
         this.init().then(function(data) {
-            console.log("Collaboration started for "+ self.app_name) ;
+            console.log("CE : Collaboration started for "+ self.app_name) ;
             self.addUser() ;
 
             // because we may arrive in an allready running session
             // get all steps from last last save 
-            self.getSteps(0,true).then(function(steps){
+            self.getSteps().then(function(steps){
                 steps.forEach(step => emit(self.app_name+"::externalAddStep",step)) ;
             })
             
             // start pulling for change
-            self.startCommunication() ;
+            self.communicationStarted = true ;
+            console.log("CE : starting communication ") ; 
+            self.startCommunication() ;        
         });
         
     },
 
     stop: function() {
         this.removeUser() ;
+        this.stopCommunication() ;
+        console.log("CE : Collaboration stopped for "+ this.app_name) ;
     },
 
     init: function() {
@@ -71,7 +75,7 @@ export default {
 
     addUser: function() {
         var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/adduser');
-        console.log("Adding user " + OC.currentUser ) ;
+        console.log("CE : Adding user " + OC.currentUser ) ;
 
         var ajx = $.ajax({
             type: 'POST',
@@ -85,7 +89,7 @@ export default {
 
     removeUser: function() {
         var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/removeuser');
-        console.log("Removing user " + OC.currentUser ) ;
+        console.log("CE : Removing user " + OC.currentUser ) ;
 
         var ajx = $.ajax({
             type: 'POST',
@@ -100,33 +104,29 @@ export default {
     sendStep: function(payload) {
 
         var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/addstep');
-
+        console.log("CE : Sending ",payload.type," step"  ) ;
         var ajx = $.ajax({
             type: 'POST',
-            contentType: "application/json",
-            dataType: "json",
             url: url,
-            data: JSON.stringify({id: this.id,
+            data: {id: this.id,
                    user: OC.currentUser,
                    type: payload.type,
-                   step: payload.step
-                  })
+                   step: JSON.stringify(payload.step)
+                  }
         }) ;
 
         return ajx.promise() ;
 
     },
 
-    getSteps: function(from,handlecheckpoint) {
+    getSteps: function() {
         var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/getsteps');
-        console.log("get initial steps") ;
+        console.log("CE : Getting initial steps") ;
         var ajx = $.ajax({
             type: 'GET',
             url: url,
             data: {
-                   id: this.id,
-                   fromStep: from,
-                   handlecheckpoint: handlecheckpoint
+                   id: this.id
                   }
         }) ;
 
@@ -134,24 +134,30 @@ export default {
     },
 
     startCommunication: function() {
-        this.communicationStarted = true ;
-
-        while (this.communicationStarted = true) {
-            this.longPull().done( function(data){
-                console.log(data) ;
-            })
-        }
-
+        var self = this ;
+ 
+        this.longPull().done(function(steps) {
+            steps.forEach(function (step) {
+                if (step.userId != OC.currentUser) {
+                    emit(self.app_name+"::externalAddStep",step) ;
+                    console.log("CE : A step for me !") ;
+                }  ;
+            }) ;
+            if (self.communicationStarted == true) {
+                self.startCommunication() ;	
+            }
+        })
     },
 
     longPull: function() {
         var url = OC.generateUrl('apps/'+this.app_name+'/collaboration/pushstep');
-        console.log("Starting polling ...") ;
+        console.log("CE : Poll again ...") ;
         var ajx = $.ajax({
             type: 'GET',
             url: url,
             data: {
                    id: this.id,
+                   user: OC.currentUser
                   }
         }) ;
 
