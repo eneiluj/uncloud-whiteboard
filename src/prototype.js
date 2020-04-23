@@ -45,7 +45,7 @@ export default {
 		this.NewFileMenu.APP_EXT = APP_EXT
 		this.NewFileMenu.APP_MIME = APP_MIME
 
-		this.container = '<div id=' + this.APP_NAME + '-container><div id=' + this.APP_NAME + '-editor></div></div>'
+		// this.container = '<div id=app-content-' + this.APP_NAME + '><div id=' + this.APP_NAME + '-editor></div></div>'
 
 		OC.Plugins.register('OCA.Files.NewFileMenu', this.NewFileMenu)
 		this.registerFileActions()
@@ -56,11 +56,16 @@ export default {
 	setupContainer: function(filename, context) {
 
 		const self = this
-		/*
-		const container = document.createElement('div')
-		container.id = this.APP_NAME + '-container'
-		document.body.appendChild(container)
 
+		const container = document.createElement('div')
+		container.id = 'app-content-' + this.APP_NAME
+
+		const editor = document.createElement('div')
+		editor.id = this.APP_NAME + '-editor'
+
+		container.append(editor)
+
+		/*
 		Vue.prototype.t = window.t
 		Vue.prototype.n = window.n
 		Vue.prototype.OCA = window.OCA
@@ -73,30 +78,40 @@ export default {
 		vm.$mount(container)
 		*/
 
-		 $('#content')
-			.append(this.container)
-			.addClass('viewer-mode')
-			.addClass('no-sidebar')
+		document.getElementById('app-content').appendChild(container)
+		document.getElementById('app-navigation').classList.add('hidden')
 
 		// close button
-		this.closebtn = '<div id=' + this.APP_NAME + '-closebtn class=icon-close></div>'
-		$('#' + this.APP_NAME + '-container').append(this.closebtn)
-		$('#' + this.APP_NAME + '-closebtn').click(function() {
+		const closebtn = document.createElement('div')
+		closebtn.id = this.APP_NAME + '-closebtn'
+		closebtn.classList.add('icon-close')
+
+		container.append(closebtn)
+		closebtn.addEventListener('click', function() {
 			self.stopEdit()
 		})
 
 		// save button
-		this.savebtn = '<div id=' + this.APP_NAME + '-savebtn class=icon-save></div>'
-		$('#' + this.APP_NAME + '-container').append(this.savebtn)
-		$('#' + this.APP_NAME + '-savebtn').click(function() {
+		const savebtn = document.createElement('div')
+		savebtn.id = this.APP_NAME + '-savebtn'
+		savebtn.classList.add('icon-save')
+
+		container.append(savebtn)
+		savebtn.addEventListener('click', function() {
 			self.saveEdit()
 		})
 
 		// share button
-		this.sharebtn = '<div id=' + this.APP_NAME + '-sharebtn class=icon-menu-sidebar></div>'
-		$('#' + this.APP_NAME + '-container').append(this.sharebtn)
-		$('#' + this.APP_NAME + '-sharebtn').click(function() {
-			OCA.Files.Sidebar.open(context.dir + '/' + filename)
+		const sharebtn = document.createElement('div')
+		sharebtn.id = this.APP_NAME + '-sharebtn'
+		sharebtn.classList.add('icon-menu-sidebar')
+		container.append(sharebtn)
+		sharebtn.addEventListener('click', function() {
+			if (!document.getElementById('app-sidebar')) {
+				OCA.Files.Sidebar.open(context.dir + '/' + filename)
+			} else {
+				OCA.Files.Sidebar.close()
+			}
 		})
 
 	},
@@ -197,8 +212,8 @@ export default {
 
 		// remove app container
 		// TODO handle Vue destroying
-		$('#' + this.APP_NAME + '-container').remove() // eslint-disable-line
-		$('#content').removeClass('viewer-mode').removeClass('no-sidebard') // eslint-disable-line
+		document.getElementById('app-content-' + this.APP_NAME).remove()
+		document.getElementById('app-navigation').classList.remove('hidden')
 	},
 
 	// save edit

@@ -1,13 +1,13 @@
-#whiteboard-container {
+#app-content-whiteboard {
     position: absolute;
     top: 0 ;
-    bottom: 0;
     left:0 ;
-    right: 0 ;
+    width: 100% ;
+    height: 100% ;
     background-color: white;
     z-index: 1000;
-    margin-top: 50px ;
     overflow: hidden;
+    display: block;
 }
 
 .icon-whiteboard {
