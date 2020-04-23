@@ -80,10 +80,8 @@ export default {
 		const url = generateUrl('apps/' + this.appname + '/file/save')
 
 		axios.post(url, {
-			param: {
-				content: JSON.stringify(this.whiteboard.getSnapshot()),
-				path: this.context.dir + '/' + this.filename,
-			},
+			content: JSON.stringify(this.whiteboard.getSnapshot()),
+			path: this.context.dir + '/' + this.filename,
 		}).then(function(content) {
 			OC.Notification.showTemporary('File saved')
 			const payload = {
@@ -113,9 +111,19 @@ export default {
 				'step': self.LC.shapeToJSON(data.shape),
 			}
 			emit(self.appname + '::editorAddStep', payload)
-			// console.log('ED: Creating NewShape ')
 			return data
 		})
+
+		/*
+		this.whiteboard.on('backgroundColorChange', function(data) {
+			const payload = {
+				'type': 'backgroundColorChange',
+				'step': data,
+			}
+			emit(self.appname + '::editorAddStep', payload)
+			return data
+		})
+		*/
 
 	},
 
@@ -130,9 +138,17 @@ export default {
 			const shapeStep = this.LC.JSONToShape(JSON.parse(step.stepData)) // eslint-disable-line
 			this.whiteboard.saveShape(shapeStep, false)
 			break
-		default: console.warn('unknown step type')
+		case 'backgroundColorChange':
+			this.whiteboard.setColor('background', step.stepData)
+			break
+		case 'undo':
+			this.whiteboard.undo()
+			break
+		case 'redo':
+			this.whiteboard.undo()
+			break
+		default: console.warn('ED : Unknown step type')
 		}
-
 	},
 
 }

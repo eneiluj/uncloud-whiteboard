@@ -88,14 +88,14 @@ class CollaborationEngine {
 
         $cnt = count($this->UserMapper->findAll($this->AppName,$fileId)) ;
         if ( $cnt == 0 ) {
-            // delete all steps for this file
+            $this->StepMapper->removeAll($fileId) ;
         }
 
         return "user removed" ;
 
     }
 
-    // ALMOST DONE
+    // DONE
     public function addStep(int $fileId,string $user, string $type, string $datas) {
 
             $Nstep = new Step() ;
@@ -114,12 +114,14 @@ class CollaborationEngine {
     
     // DONE
     public function getSteps($fileId) {
-        return $this->StepMapper->findAll($this->AppName,$fileId) ;
+        $result =$this->StepMapper->findAll($this->AppName,$fileId) ;
+        return $result ;
     }
 
     // DONE 
     public function getUserList($fileId) {
-        return $this->UserMapper->findAll($this->AppName,$fileId) ;
+        $result = $this->UserMapper->findAll($this->AppName,$fileId) ;
+        return $result ;
     }
 
     // DONE

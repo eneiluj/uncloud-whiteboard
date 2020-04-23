@@ -63,7 +63,7 @@ Class StepMapper extends QBMApper {
 
       $sub = $this->db->getQueryBuilder() ;
 
-      $sub->select('step_id')
+      $sub->select('*')
               ->from($this->getTableName())
               ->Where( 
                 $sub->expr()->eq('step_type',$sub->createNamedParameter('save', IQueryBuilder::PARAM_STR))
@@ -71,7 +71,7 @@ Class StepMapper extends QBMApper {
               ->orderBy('step_id','DESC')
               ->setMaxResults(1) ;
       
-      $lastSave = $this->findEntities($sub) ;
+      $lastSave = $this->findEntity($sub) ;
 
       $qb->select('*')
               ->from($this->getTableName())
@@ -83,13 +83,24 @@ Class StepMapper extends QBMApper {
               
       if (count($lastSave) != 0) {
         $qb->andWhere(
-                $qb->expr()->gt('step_id',$qb->createNamedParameter($lastSave->getSteptId, IQueryBuilder::PARAM_INT))
+                $qb->expr()->gt('step_id',$qb->createNamedParameter($lastSave->getStepId(), IQueryBuilder::PARAM_INT))
         );
       } ;
 
-      $qb->orderBy('step_id','DESC') ;
+      $qb->orderBy('step_id','ASC') ;
           
      return $this->findEntities($qb) ; 
+  }
+
+  public function removeAll(int $file_id) {
+
+    $qb = $this->db->getQueryBuilder();
+    $qb->delete('cengine_steps')
+      ->where(
+        $qb->expr()->eq('file_id', $qb->createNamedParameter($file_id, IQueryBuilder::PARAM_INT))
+      ) ;
+
+      $qb->execute() ;
   }
 
 

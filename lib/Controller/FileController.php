@@ -35,7 +35,6 @@ class FileController extends Controller {
         $this->userFolder = $userFolder;
     }
 
-
     /**
      * @NoAdminRequired
     */

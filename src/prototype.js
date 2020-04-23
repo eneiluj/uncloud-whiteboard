@@ -184,7 +184,6 @@ export default {
 		// local changes => send to Engine
 		subscribe(this.APP_NAME + '::editorAddStep', this.EDS = (data) => {
 			self.CE.sendStep(data).then(function() {
-				// console.log("CE: sendingStep Done",data) ;
 			})
 		})
 
@@ -200,6 +199,9 @@ export default {
 
 	// stop editing
 	stopEdit: function() {
+		// save the content
+		this.ED.saveContent()
+
 		// unsubscribe from bus event
 		unsubscribe(this.APP_NAME + '::editorAddStep', this.EDS)
 		unsubscribe(this.APP_NAME + '::externalAddStep', this.EAS)
