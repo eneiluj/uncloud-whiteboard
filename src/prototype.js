@@ -1,5 +1,3 @@
-/* eslint-env jquery */
-
 /**
  * @author Matthieu Le Corre <matthieu.lecorre@univ-nantes.fr>
  *
@@ -25,8 +23,8 @@ import collaborationEngine from './collaboration.js'
 import { subscribe, unsubscribe } from '@nextcloud/event-bus'
 import { imagePath } from '@nextcloud/router'
 
-// import Vue from 'vue'
-// import prototypeView from './prototypeView'
+import Vue from 'vue'
+import PrototypeView from './PrototypeView'
 
 /**
 * @namespace ApplicationPrototype
@@ -45,7 +43,7 @@ export default {
 		this.NewFileMenu.APP_EXT = APP_EXT
 		this.NewFileMenu.APP_MIME = APP_MIME
 
-		// this.container = '<div id=app-content-' + this.APP_NAME + '><div id=' + this.APP_NAME + '-editor></div></div>'
+		this.userList = []
 
 		OC.Plugins.register('OCA.Files.NewFileMenu', this.NewFileMenu)
 		this.registerFileActions()
@@ -60,58 +58,38 @@ export default {
 		const container = document.createElement('div')
 		container.id = 'app-content-' + this.APP_NAME
 
-		const editor = document.createElement('div')
-		editor.id = this.APP_NAME + '-editor'
+		document.getElementById('app-content').appendChild(container)
+		document.getElementById('app-navigation').classList.add('hidden')
 
-		container.append(editor)
-
-		/*
 		Vue.prototype.t = window.t
 		Vue.prototype.n = window.n
 		Vue.prototype.OCA = window.OCA
 
-		const vm = new Vue({
-			el: '#whiteboard-container',
-			render: h => h(prototypeView),
+		this.vm = new Vue({
+			data: {
+				userList: this.userList,
+			},
+			render: h => h(
+				PrototypeView,
+				{
+					props: {
+						appName: this.APP_NAME,
+						filename: filename,
+						context: context,
+						app: 'app-content-whiteboard',
+						apped: 'whiteboard-editor',
+					},
+				}
+			),
 		})
 
-		vm.$mount(container)
-		*/
+		 this.vm.$mount(container)
 
-		document.getElementById('app-content').appendChild(container)
-		document.getElementById('app-navigation').classList.add('hidden')
-
-		// close button
-		const closebtn = document.createElement('div')
-		closebtn.id = this.APP_NAME + '-closebtn'
-		closebtn.classList.add('icon-close')
-
-		container.append(closebtn)
-		closebtn.addEventListener('click', function() {
-			self.stopEdit()
-		})
-
-		// save button
-		const savebtn = document.createElement('div')
-		savebtn.id = this.APP_NAME + '-savebtn'
-		savebtn.classList.add('icon-save')
-
-		container.append(savebtn)
-		savebtn.addEventListener('click', function() {
+		subscribe(this.APP_NAME + '::saveClick', function() {
 			self.saveEdit()
 		})
-
-		// share button
-		const sharebtn = document.createElement('div')
-		sharebtn.id = this.APP_NAME + '-sharebtn'
-		sharebtn.classList.add('icon-menu-sidebar')
-		container.append(sharebtn)
-		sharebtn.addEventListener('click', function() {
-			if (!document.getElementById('app-sidebar')) {
-				OCA.Files.Sidebar.open(context.dir + '/' + filename)
-			} else {
-				OCA.Files.Sidebar.close()
-			}
+		subscribe(this.APP_NAME + '::closeClick', function() {
+			self.stopEdit()
 		})
 
 	},
@@ -192,8 +170,12 @@ export default {
 			self.ED.applyChange(data)
 		})
 
-		// engine tells us hat someone arrived into the session
-		// subscribe(this.APP_NAME+"::newUser",this.addUser) ;
+		// engine tells us that users list changed
+		subscribe(this.APP_NAME + '::usersListChanged', this.ECU = (users) => {
+			this.userList.length = 0
+			users.data.forEach(user => this.userList.push(user.userId))
+			// console.log(this.userList)
+		})
 
 	},
 

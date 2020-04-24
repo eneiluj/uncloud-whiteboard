@@ -72,7 +72,7 @@ class CollaborationController extends Controller {
      * 
      **/
     public function getUserList($id) {
-        return $this->engine->getUserList() ;
+        return $this->engine->getUserList($id) ;
     }
 
     /**

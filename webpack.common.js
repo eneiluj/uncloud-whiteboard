@@ -13,14 +13,14 @@ module.exports = {
 	},
 	module: {
 		rules: [
-			/*{
+			{
 				test: /\.css$/,
 				use: ['vue-style-loader', 'css-loader'],
 			},
 			{
 				test: /\.scss$/,
 				use: ['vue-style-loader', 'css-loader', 'sass-loader'],
-			},*/
+			},
 			{
 				test: /\.(js|vue)$/,
 				use: 'eslint-loader',
@@ -47,7 +47,7 @@ module.exports = {
 	},
 	plugins: [
 		new VueLoaderPlugin(),
-		//new StyleLintPlugin(),
+		new StyleLintPlugin(),
 	],
 	resolve: {
 		extensions: ['*', '.js', '.vue'],

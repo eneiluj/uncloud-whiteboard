@@ -19,52 +19,6 @@
     background-size: 16px;
 }
 
-/*button*/
-#whiteboard-sharebtn {
-    position: absolute;
-    top:0 ;
-    right: 60px ;
-    width: 30px ;
-    height: 30Px ;
-    z-index: inherit;
-}
-
-#whiteboard-sharebtn:hover {
-    border: 1px solid silver ;
-    border-radius: 2px ;
-}
-
-#whiteboard-savebtn {
-    position: absolute;
-    top:0 ;
-    right: 30px ;
-    width: 30px ;
-    height: 30Px ;
-    z-index: inherit;
-}
-
-#whiteboard-savebtn:hover {
-    border: 1px solid silver ;
-    border-radius: 2px ;
-}
-
-#whiteboard-closebtn {
-    position: absolute;
-    top:0 ;
-    right: 0 ;
-    width: 30px ;
-    height: 30Px ;
-    z-index: inherit;
-}
-
-#whiteboard-closebtn:hover {
-    border: 1px solid silver ;
-    border-radius: 2px ;
-}
-
-
-
-
 /*Editor stuff*/
 .literally {
     background-color: white !important;
@@ -74,6 +28,7 @@
 .lc-options.horz-toolbar {
     background-color:  white !important;
     border-bottom: 1px solid silver !important;
+    height: 36px !important;
 }
 
 .lc-picker {

@@ -40,9 +40,6 @@ export default {
 		this.filename = filename
 		this.context = context
 
-		this.SSE_URL = generateUrl('apps/' + this.appName + '/collaboration/event')
-		this.SSE_OPT = { withCredentials: true }
-
 		this.init().then(function(data) {
 			// console.log('CE : Collaboration started for ' + self.appName)
 			self.addUser()
@@ -51,6 +48,11 @@ export default {
 			// get all steps from last last save
 			self.getSteps().then(function(steps) {
 				steps.data.forEach(step => emit(self.appName + '::externalAddStep', step))
+			})
+
+			// get user connected to the file
+			self.getUserList().then(function(users) {
+				emit(self.appName + '::usersListChanged', users)
 			})
 
 			// start pulling for change
@@ -119,13 +121,22 @@ export default {
 
 	getSteps: function() {
 		const url = generateUrl('apps/' + this.appName + '/collaboration/getsteps')
-		// console.log('CE : Getting initial steps')
 		const ajx = axios.get(url, {
 			params: {
 				id: this.id,
 			},
 		})
 
+		return ajx
+	},
+
+	getUserList: function() {
+		const url = generateUrl('apps/' + this.appName + '/collaboration/getuserlist')
+		const ajx = axios.get(url, {
+			params: {
+				id: this.id,
+			},
+		})
 		return ajx
 	},
 
@@ -140,7 +151,14 @@ export default {
 				}
 			})
 			if (self.communicationStarted === true) {
+				// reload long polling
 				self.startCommunication()
+
+				// and for check users
+				self.getUserList().then(function(users) {
+					emit(self.appName + '::usersListChanged', users)
+				})
+
 			}
 		})
 	},
@@ -161,7 +179,6 @@ export default {
 
 	stopCommunication: function() {
 		this.communicationStarted = false
-		// this.source.close() ;
 	},
 
 }
