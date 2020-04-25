@@ -26,37 +26,35 @@ use JsonSerializable;
 use OCP\AppFramework\Db\Entity;
 
 class Step extends Entity implements JsonSerializable {
+	protected $appId;
+	protected $userId;
+	protected $stepId;
+	protected $stepType;
+	protected $stepForwarded;
+	protected $stepData;
+	protected $fileId ;
 
-    protected $appId;
-    protected $userId;
-    protected $stepId;
-    protected $stepType;
-    protected $stepForwarded;
-    protected $stepData;
-    protected $fileId ;
+	public function __construct() {
+		$this->addType("id",integer) ;
+		$this->addType("appId",string) ;
+		$this->addType("userId",string) ;
+		$this->addType("fileId",integer) ;
+		$this->addType("stepId",integer) ;
+		$this->addType("stepType",string) ;
+		$this->addType("stepData",string) ;
+		$this->addType("stepForwarded",string) ;
+	}
 
-    public function __construct() {
-        $this->addType("id",integer) ;
-        $this->addType("appId",string) ;
-        $this->addType("userId",string) ;
-        $this->addType("fileId",integer) ;
-        $this->addType("stepId",integer) ;
-        $this->addType("stepType",string) ;
-        $this->addType("stepData",string) ;
-        $this->addType("stepForwarded",string) ;
-    }
-
-    public function jsonSerialize() {
-        return [
-            'id' => $this->id,
-            'appId' => $this->appId,
-            'userId' => $this->userId,
-            'fileId' => $this->fileId,
-            'stepData' => $this->stepData,
-            'stepId'=> $this->stepId,
-            'stepType' => $this->stepType,
-            'stepForwarded' => $this->stepForwarded
-        ];
-    }
-
+	public function jsonSerialize() {
+		return [
+			'id' => $this->id,
+			'appId' => $this->appId,
+			'userId' => $this->userId,
+			'fileId' => $this->fileId,
+			'stepData' => $this->stepData,
+			'stepId'=> $this->stepId,
+			'stepType' => $this->stepType,
+			'stepForwarded' => $this->stepForwarded
+		];
+	}
 }

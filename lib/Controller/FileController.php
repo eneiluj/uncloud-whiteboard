@@ -27,32 +27,30 @@ use OCP\Files\File;
 use OCP\Files\Folder;
 
 class FileController extends Controller {
+	public function __construct($AppName, IRequest $request, Folder $userFolder) {
+		parent::__construct($AppName, $request);
 
-    public function __construct($AppName, IRequest $request, Folder $userFolder) {
-        parent::__construct($AppName, $request);
+		//$this->request = $request ;
+		$this->userFolder = $userFolder;
+	}
 
-        //$this->request = $request ;
-        $this->userFolder = $userFolder;
-    }
+	/**
+	 * @NoAdminRequired
+	 */
+	public function save($path,$content) {
 
-    /**
-     * @NoAdminRequired
-    */
-    public function save($path,$content) {
+	   /** @var File $file */
+		$file = $this->userFolder->get($path);
+		$file->putContent($content);
+	}
 
-       /** @var File $file */
-        $file = $this->userFolder->get($path);
-        $file->putContent($content);
-    }
+	/**
+	 * @NoAdminRequired
+	 */
+	public function load($path) {
 
-    /**
-     * @NoAdminRequired
-    */
-    public function load($path) {
-
-       /** @var File $file */
-       $file = $this->userFolder->get($path);
-       return $file->getContent();
-    }
-
+	   /** @var File $file */
+		$file = $this->userFolder->get($path);
+		return $file->getContent();
+	}
 }

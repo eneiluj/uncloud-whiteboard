@@ -26,28 +26,26 @@ use JsonSerializable;
 use OCP\AppFramework\Db\Entity;
 
 class User extends Entity implements JsonSerializable {
+	protected $appId;
+	protected $userId;
+	protected $fileId;
+	protected $lastSeen;
 
-    protected $appId;
-    protected $userId;
-    protected $fileId;
-    protected $lastSeen;
+	public function __construct() {
+		$this->addType("id",integer) ;
+		$this->addType("appId",string) ;
+		$this->addType("userId",string) ;
+		$this->addType("fileId",integer) ;
+		$this->addType("lastSeen",integer) ;
+	}
 
-    public function __construct() {
-        $this->addType("id",integer) ;
-        $this->addType("appId",string) ;
-        $this->addType("userId",string) ;
-        $this->addType("fileId",integer) ;
-        $this->addType("lastSeen",integer) ;
-    }
-
-    public function jsonSerialize() {
-        return [
-            'id' => $this->id,
-            'appId' => $this->appId,
-            'userId' => $this->userId,
-            'fileId'=> $this->fileId,
-            'lastSeen' => $this->lastSeen
-        ];
-    }
-
+	public function jsonSerialize() {
+		return [
+			'id' => $this->id,
+			'appId' => $this->appId,
+			'userId' => $this->userId,
+			'fileId'=> $this->fileId,
+			'lastSeen' => $this->lastSeen
+		];
+	}
 }

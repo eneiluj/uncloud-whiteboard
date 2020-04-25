@@ -19,34 +19,27 @@
  *
  */
 
- namespace OCA\whiteboard\Appinfo ;
+namespace OCA\whiteboard\Appinfo ;
 
- 
- use OCP\AppFramework\App; 
+use OCP\AppFramework\App;
 
+class Application extends App {
+	public function __construct(array $urlParams = []) {
+		parent::__construct('whiteboard', $urlParams);
 
- class Application extends App {
+		$container = $this->getContainer() ;
+		$server = $container->getServer() ;
 
-    public function __construct(array $urlParams = []) {
-        parent::__construct('whiteboard', $urlParams);
+		$eventDispatcher = $server->getEventDispatcher() ;
+		$this->addPrivateListeners($eventDispatcher) ;
+	}
 
-        $container = $this->getContainer();
-        $server = $container->getServer();
-
-        $eventDispatcher = $server->getEventDispatcher();
-        $this->addPrivateListeners($eventDispatcher) ;
-
-
-    }
-
-    protected function addPrivateListeners ($eventDispatcher) {
-
-        $eventDispatcher->addListener('OCA\Files::loadAdditionalScripts',
-            function() {
-                \OCP\Util::addscript('whiteboard', 'main');
-                \OCP\Util::addStyle('whiteboard','style') ;
-                \OCP\Util::addStyle('whiteboard','literallycanvas') ;
-            });
-    }
-
+	protected function addPrivateListeners($eventDispatcher) {
+		$eventDispatcher->addListener('OCA\Files::loadAdditionalScripts',
+			function () {
+				\OCP\Util::addscript('whiteboard', 'main');
+				\OCP\Util::addStyle('whiteboard','style') ;
+				\OCP\Util::addStyle('whiteboard','literallycanvas') ;
+			});
+	}
 }

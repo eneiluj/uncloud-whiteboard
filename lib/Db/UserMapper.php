@@ -26,49 +26,42 @@ use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
-use OCA\whiteboard\Db\User ;
-
-Class UserMapper extends QBMApper {
-
-    public function __construct(IDBConnection $db) {
+class UserMapper extends QBMApper {
+	public function __construct(IDBConnection $db) {
 		parent::__construct($db, 'cengine_users', User::class) ;
-    }
-    
-    public function find(string $user_id, string $app_id, int $file_id) {
-        $qb = $this->db->getQueryBuilder();
+	}
+	
+	public function find(string $user_id, string $app_id, int $file_id) {
+		$qb = $this->db->getQueryBuilder();
 
-        $qb->select('*')
-                ->from($this->getTableName())
-                ->where(
-                  $qb->expr()->eq('user_id', $qb->createNamedParameter($user_id, IQueryBuilder::PARAM_STR))
-                )->andWhere(
-                  $qb->expr()->eq('app_id', $qb->createNamedParameter($app_id, IQueryBuilder::PARAM_STR))
-                )->andWhere(
-                  $qb->expr()->eq('file_id', $qb->createNamedParameter($file_id, IQueryBuilder::PARAM_INT))
-                );
-                
-        try {
-          return $this->findEntity($qb) ;
-        }
-        catch (DoesNotExistException $e ) {
-          return null ;
-        }
-    }
+		$qb->select('*')
+				->from($this->getTableName())
+				->where(
+				  $qb->expr()->eq('user_id', $qb->createNamedParameter($user_id, IQueryBuilder::PARAM_STR))
+				)->andWhere(
+				  $qb->expr()->eq('app_id', $qb->createNamedParameter($app_id, IQueryBuilder::PARAM_STR))
+				)->andWhere(
+				  $qb->expr()->eq('file_id', $qb->createNamedParameter($file_id, IQueryBuilder::PARAM_INT))
+				);
+				
+		try {
+			return $this->findEntity($qb) ;
+		} catch (DoesNotExistException $e) {
+			return null ;
+		}
+	}
 
-    public function findAll(string $app_id, int $file_id) {
-      $qb = $this->db->getQueryBuilder();
+	public function findAll(string $app_id, int $file_id) {
+		$qb = $this->db->getQueryBuilder();
 
-      $qb->select('*')
-              ->from($this->getTableName())
-              ->Where(
-                $qb->expr()->eq('app_id', $qb->createNamedParameter($app_id, IQueryBuilder::PARAM_STR))
-              )->andWhere(
-                $qb->expr()->eq('file_id', $qb->createNamedParameter($file_id, IQueryBuilder::PARAM_INT))
-              );
-          
-        return $this->findEntities($qb) ;
-    
-  }
-
-
+		$qb->select('*')
+			  ->from($this->getTableName())
+			  ->Where(
+				$qb->expr()->eq('app_id', $qb->createNamedParameter($app_id, IQueryBuilder::PARAM_STR))
+			  )->andWhere(
+				$qb->expr()->eq('file_id', $qb->createNamedParameter($file_id, IQueryBuilder::PARAM_INT))
+			  );
+		  
+		return $this->findEntities($qb) ;
+	}
 }

@@ -19,94 +19,88 @@
  *
  */
 
-  namespace OCA\whiteboard\Migration;
+namespace OCA\whiteboard\Migration;
 
-  use Closure;
-  use OCP\DB\ISchemaWrapper;
-  use OCP\Migration\SimpleMigrationStep;
-  use OCP\Migration\IOutput;
+use Closure;
+use OCP\DB\ISchemaWrapper;
+use OCP\Migration\SimpleMigrationStep;
+use OCP\Migration\IOutput;
 
-  class Version000001Date20200416 extends SimpleMigrationStep {
+class Version000001Date20200416 extends SimpleMigrationStep {
 
-    /**
-    * @param IOutput $output
-    * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
-    * @param array $options
-    * @return null|ISchemaWrapper
-    */
-    public function changeSchema(IOutput $output, Closure $schemaClosure, array $options) {
-        /** @var ISchemaWrapper $schema */
-        $schema = $schemaClosure();
+	/**
+	 * @param IOutput $output
+	 * @param Closure $schemaClosure The `\Closure` returns a `ISchemaWrapper`
+	 * @param array $options
+	 * @return null|ISchemaWrapper
+	 */
+	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options) {
+		/** @var ISchemaWrapper $schema */
+		$schema = $schemaClosure();
 
-        // Session
-        if (!$schema->hasTable('cengine_steps')) {
-            $table = $schema->createTable('cengine_steps');
-            $table->addColumn('id', 'integer', [
-                'autoincrement' => true,
-                'notnull' => true,
-            ]);
-            $table->addColumn('app_id', 'string', [
-                'notnull' => true,
-                'length' => 200
-            ]);
-            $table->addColumn('user_id', 'string', [
-                'notnull' => true,
-                'length' => 200,
-            ]);
-            $table->addColumn('file_id', 'integer', [
-                'notnull' => true,
-            ]);
-            $table->addColumn('step_data', 'text', [
-                'notnull' => true,
-                'default' => ''
-            ]);
-            $table->addColumn('step_id', 'bigint', [
-                'notnull' => true,
-                'unsigned'=> true
-            ]);
-            $table->addColumn('step_forwarded', 'text', [
-                'notnull' => false,
-            ]);
-            $table->addColumn('step_type', 'string', [
-                'notnull' => true,
-                'length' => 200
-            ]);
-            $table->setPrimaryKey(['id']);
-            $table->addIndex(['app_id'], 'cengine_steps_app');
-        }
+		// Session
+		if (!$schema->hasTable('cengine_steps')) {
+			$table = $schema->createTable('cengine_steps');
+			$table->addColumn('id', 'integer', [
+				'autoincrement' => true,
+				'notnull' => true,
+			]);
+			$table->addColumn('app_id', 'string', [
+				'notnull' => true,
+				'length' => 200
+			]);
+			$table->addColumn('user_id', 'string', [
+				'notnull' => true,
+				'length' => 200,
+			]);
+			$table->addColumn('file_id', 'integer', [
+				'notnull' => true,
+			]);
+			$table->addColumn('step_data', 'text', [
+				'notnull' => true,
+				'default' => ''
+			]);
+			$table->addColumn('step_id', 'bigint', [
+				'notnull' => true,
+				'unsigned'=> true
+			]);
+			$table->addColumn('step_forwarded', 'text', [
+				'notnull' => false,
+			]);
+			$table->addColumn('step_type', 'string', [
+				'notnull' => true,
+				'length' => 200
+			]);
+			$table->setPrimaryKey(['id']);
+			$table->addIndex(['app_id'], 'cengine_steps_app');
+		}
 
-        // Users
-        if (!$schema->hasTable('cengine_users')) {
-            $table = $schema->createTable('cengine_users');
-            $table->addColumn('id', 'integer', [
-                'autoincrement' => true,
-                'notnull' => true,
-            ]);
-            $table->addColumn('app_id', 'string', [
-                'notnull' => true,
-                'length' => 200
-            ]);
-            $table->addColumn('user_id', 'string', [
-                'notnull' => true,
-                'length' => 200,
-            ]);
-            $table->addColumn('file_id', 'integer', [
-                'notnull' => true,
-            ]);
-            $table->addColumn('last_seen', 'bigint', [
-                'notnull' => true,
-                'unsigned'=> true
-            ]);
+		// Users
+		if (!$schema->hasTable('cengine_users')) {
+			$table = $schema->createTable('cengine_users');
+			$table->addColumn('id', 'integer', [
+				'autoincrement' => true,
+				'notnull' => true,
+			]);
+			$table->addColumn('app_id', 'string', [
+				'notnull' => true,
+				'length' => 200
+			]);
+			$table->addColumn('user_id', 'string', [
+				'notnull' => true,
+				'length' => 200,
+			]);
+			$table->addColumn('file_id', 'integer', [
+				'notnull' => true,
+			]);
+			$table->addColumn('last_seen', 'bigint', [
+				'notnull' => true,
+				'unsigned'=> true
+			]);
 
-            $table->setPrimaryKey(['id']);
-            $table->addIndex(['app_id'], 'cengine_users_app');
-        }
-        return $schema;
-
-        return $schema;
-
-
-
-    }
-
+			$table->setPrimaryKey(['id']);
+			$table->addIndex(['app_id'], 'cengine_users_app');
+		}
+		return $schema;
+	}
 }
