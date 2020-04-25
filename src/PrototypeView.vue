@@ -24,8 +24,12 @@
 		<button class="icon-save" @click="save" />
 		<button class="icon-menu-sidebar" @click="sidebar" />
 		<ul v-if="userList.length > 1" class="AvatarList">
-			<li v-for="user in userList" :key="userList.indexOf(user)">
-				<Avatar :user="user" />
+			<li v-for="user in userList"
+				:key="userList.indexOf(user)"
+				:class="{ offline: isOffline(user) }">
+				<Avatar
+					:user="user.userId"
+					menu-position="left" />
 			</li>
 		</ul>
 		<AppContent :id="apped">
@@ -60,6 +64,14 @@ export default {
 		}
 	},
 	methods: {
+		isOffline: function(user) {
+			const now = Math.floor(Date.now() / 1000) - 30
+			if (user.lastSeen < now) {
+				return true
+			} else {
+				return false
+			}
+		},
 		save() {
 			emit(this.appName + '::saveClick')
 		},
@@ -106,5 +118,9 @@ button:hover {
 
 .AvatarList li {
 	margin-left: 2px ;
+}
+
+.offline {
+	opacity: .4 ;
 }
 </style>

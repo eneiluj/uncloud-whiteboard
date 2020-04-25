@@ -30,15 +30,12 @@ use OCA\whiteboard\Db\StepMapper ;
 use OCA\whiteboard\Db\User ;
 use OCA\whiteboard\Db\UserMapper ;
 
-
-//class CollaborationEngine implements ICollaborationEngine {
 class CollaborationEngine {
 
     private $StepMapper ;
     private $UserMapper ;
 
-
-    private $cache ;
+    // private $cache ;
 
     public function __construct(ICacheFactory $cacheFactory, StepMapper $StepMapper, UserMapper $UserMapper) {
 
@@ -73,11 +70,12 @@ class CollaborationEngine {
             return $this->UserMapper->insert($Nuser);
 
         } else {
+            $this->updateLastSeen($user,$fileId) ;
             return "already there" ;
         } ;
     }
 
-    //ALMOST DONE
+    //DONE
     public function removeUser(int $fileId, string $user) {
         $usr = $this->UserMapper->find($user,$this->AppName,$fileId) ;
         $cnt = count($this->UserMapper->findAll($this->AppName,$fileId)) ;
@@ -98,6 +96,8 @@ class CollaborationEngine {
     // DONE
     public function addStep(int $fileId,string $user, string $type, string $datas) {
 
+            $this->updateLastSeen($user,$fileId) ;
+        
             $Nstep = new Step() ;
 
             $Nstep->setAppId($this->AppName) ;
@@ -120,8 +120,14 @@ class CollaborationEngine {
 
     // DONE 
     public function getUserList($fileId) {
-        $result = $this->UserMapper->findAll($this->AppName,$fileId) ;
-        return $result ;
+        $users = $this->UserMapper->findAll($this->AppName,$fileId) ;
+
+        foreach ($users as $user) {
+            if ($user->getLastSeen() + 60 < time()) {
+                $this->UserMapper->delete($user) ;
+            }
+        }
+        return $users ;
     }
 
     // DONE
@@ -138,6 +144,9 @@ class CollaborationEngine {
                 sleep(1) ;
             }
         } ;
+
+        $this->updateLastSeen($user,$fileId) ;
+
         foreach ($steps as $step) {
             $forwarded = explode(',',$step->getStepForwarded()) ;
             $forwarded[] = $user ;
@@ -146,6 +155,13 @@ class CollaborationEngine {
             $this->StepMapper->update($step) ;
         } ;
         return $steps ;
+    }
+
+    // PRIVATE 
+    private function updateLastSeen(string $userId, int $fileId) {
+        $usr = $this->UserMapper->find($userId,$this->AppName,$fileId) ;
+        $usr->setLastSeen(time()) ;
+        $this->UserMapper->update($usr) ;
     }
     
 } 

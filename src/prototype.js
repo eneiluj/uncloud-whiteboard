@@ -83,7 +83,7 @@ export default {
 			),
 		})
 
-		 this.vm.$mount(container)
+		this.vm.$mount(container)
 
 		subscribe(this.APP_NAME + '::saveClick', function() {
 			self.saveEdit()
@@ -173,8 +173,7 @@ export default {
 		// engine tells us that users list changed
 		subscribe(this.APP_NAME + '::usersListChanged', this.ECU = (users) => {
 			this.userList.length = 0
-			users.data.forEach(user => this.userList.push(user.userId))
-			// console.log(this.userList)
+			users.data.forEach(user => this.userList.push(user))
 		})
 
 	},
@@ -187,6 +186,7 @@ export default {
 		// unsubscribe from bus event
 		unsubscribe(this.APP_NAME + '::editorAddStep', this.EDS)
 		unsubscribe(this.APP_NAME + '::externalAddStep', this.EAS)
+		unsubscribe(this.APP_NAME + '::usersListChanged', this.ECU)
 
 		// stop collaboration Engine
 		this.CE.stop()
@@ -195,7 +195,7 @@ export default {
 		this.ED.stop()
 
 		// remove app container
-		// TODO handle Vue destroying
+		this.vm.$destroy()
 		document.getElementById('app-content-' + this.APP_NAME).remove()
 		document.getElementById('app-navigation').classList.remove('hidden')
 	},
