@@ -28,8 +28,9 @@
 				:key="userList.indexOf(user)"
 				:class="{ offline: isOffline(user) }">
 				<Avatar
+					:display-name="user.userId"
 					:user="user.userId"
-					menu-position="left" />
+					menu-position="right" />
 			</li>
 		</ul>
 		<AppContent :id="apped">
@@ -110,10 +111,8 @@ button:hover {
 	float: right;
 	z-index: inherit;
 	padding-right: 10px;
-	z-index: inherit;
 	margin-top: 2px ;
 	display: flex ;
-	direction: rtl ;
 }
 
 .AvatarList li {
