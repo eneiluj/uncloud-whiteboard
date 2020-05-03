@@ -19,7 +19,7 @@
  -->
 
 <template>
-	<Content :id="app" :app-name="appName">
+	<Content :id="appContent" :app-name="appName">
 		<button class="icon-close" @click="close" />
 		<button class="icon-save" @click="save" />
 		<button class="icon-menu-sidebar" @click="sidebar" />
@@ -33,7 +33,7 @@
 					menu-position="right" />
 			</li>
 		</ul>
-		<AppContent :id="apped">
+		<AppContent :id="appEditor">
 			Loading {{ appName }} ...
 		</AppContent>
 	</Content>
@@ -47,23 +47,27 @@ import { emit } from '@nextcloud/event-bus'
 
 export default {
 	name: 'PrototypeView',
+
 	components: {
 		Content,
 		AppContent,
 		Avatar,
 	},
+
 	props: {
 		appName: String,
 		filename: String,
 		context: Object,
-		app: String,
-		apped: String,
+		appContent: String,
+		appEditor: String,
 	},
+
 	data: function() {
 		return {
 			userList: this.$parent.userList,
 		}
 	},
+
 	methods: {
 		isOffline: function(user) {
 			const now = Math.floor(Date.now() / 1000) - 30
@@ -73,12 +77,15 @@ export default {
 				return false
 			}
 		},
+
 		save() {
 			emit(this.appName + '::saveClick')
 		},
+
 		close() {
 			emit(this.appName + '::closeClick')
 		},
+
 		sidebar() {
 			if (!document.getElementById('app-sidebar')) {
 				OCA.Files.Sidebar.open(this.context.dir + '/' + this.filename)
@@ -86,6 +93,11 @@ export default {
 				OCA.Files.Sidebar.close()
 			}
 		},
+	},
+
+	destroyed: function() {
+		document.getElementById('app-content-' + this.appName).remove()
+		document.getElementById('app-navigation').classList.remove('hidden')
 	},
 }
 </script>

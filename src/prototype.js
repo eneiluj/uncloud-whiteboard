@@ -20,8 +20,9 @@
 
 import editor from './editor.js'
 import collaborationEngine from './collaboration.js'
-import { subscribe, unsubscribe } from '@nextcloud/event-bus'
-import { imagePath } from '@nextcloud/router'
+import { emit, subscribe, unsubscribe } from '@nextcloud/event-bus'
+import { imagePath, generateUrl } from '@nextcloud/router'
+import axios from '@nextcloud/axios'
 
 import Vue from 'vue'
 import PrototypeView from './PrototypeView'
@@ -55,6 +56,9 @@ export default {
 
 		const self = this
 
+		this.filename = filename
+		this.context = context
+
 		const container = document.createElement('div')
 		container.id = 'app-content-' + this.APP_NAME
 
@@ -76,8 +80,8 @@ export default {
 						appName: this.APP_NAME,
 						filename: filename,
 						context: context,
-						app: 'app-content-whiteboard',
-						apped: 'whiteboard-editor',
+						appContent: 'app-content-' + this.APP_NAME,
+						appEditor: this.APP_NAME + '-editor',
 					},
 				}
 			),
@@ -85,10 +89,11 @@ export default {
 
 		this.vm.$mount(container)
 
-		subscribe(this.APP_NAME + '::saveClick', function() {
+		// TODO unsubscribe !!
+		subscribe(this.APP_NAME + '::saveClick', this.SC = () => {
 			self.saveEdit()
 		})
-		subscribe(this.APP_NAME + '::closeClick', function() {
+		subscribe(this.APP_NAME + '::closeClick', this.CC = () => {
 			self.stopEdit()
 		})
 
@@ -150,9 +155,11 @@ export default {
 
 		const self = this
 
-		// start the editor
-		this.ED = editor
-		this.ED.start(this.APP_NAME, filename, context)
+		this.loadContent().then(function(content) {
+			// start the editor
+			self.ED = editor
+			self.ED.start(self.APP_NAME, content)
+		})
 
 		// start the collaboration Engine
 		this.CE = collaborationEngine
@@ -161,8 +168,7 @@ export default {
 		// subscribtion to event bus
 		// local changes => send to Engine
 		subscribe(this.APP_NAME + '::editorAddStep', this.EDS = (data) => {
-			self.CE.sendStep(data).then(function() {
-			})
+			self.CE.sendStep(data)
 		})
 
 		// engine sent us changes => forward to editor
@@ -180,13 +186,16 @@ export default {
 
 	// stop editing
 	stopEdit: function() {
+
 		// save the content
-		this.ED.saveContent()
+		this.saveEdit()
 
 		// unsubscribe from bus event
 		unsubscribe(this.APP_NAME + '::editorAddStep', this.EDS)
 		unsubscribe(this.APP_NAME + '::externalAddStep', this.EAS)
 		unsubscribe(this.APP_NAME + '::usersListChanged', this.ECU)
+		unsubscribe(this.APP_NAME + '::closeClick', this.CC)
+		unsubscribe(this.APP_NAME + '::closeClick', this.SC)
 
 		// stop collaboration Engine
 		this.CE.stop()
@@ -196,13 +205,40 @@ export default {
 
 		// remove app container
 		this.vm.$destroy()
-		document.getElementById('app-content-' + this.APP_NAME).remove()
-		document.getElementById('app-navigation').classList.remove('hidden')
+	},
+
+	// load content
+	loadContent: function() {
+
+		// const self = this
+		const url = generateUrl('apps/' + this.APP_NAME + '/file/load')
+
+		return axios.get(url, {
+			params: {
+				path: this.context.dir + '/' + this.filename,
+			},
+		})
 	},
 
 	// save edit
 	saveEdit: function() {
-		this.ED.saveContent()
+
+		const content = this.ED.getSave()
+		const self = this
+		const url = generateUrl('apps/' + this.APP_NAME + '/file/save')
+
+		axios.post(url, {
+			content: JSON.stringify(content),
+			path: this.context.dir + '/' + this.filename,
+		}).then(function() {
+			OC.Notification.showTemporary('File saved')
+			const payload = {
+				'type': 'save',
+				'step': 'NA',
+			}
+			emit(self.APP_NAME + '::editorAddStep', payload)
+		})
+
 	},
 
 }

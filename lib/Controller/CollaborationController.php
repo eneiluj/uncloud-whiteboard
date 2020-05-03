@@ -22,22 +22,21 @@
 namespace OCA\whiteboard\Controller ;
 
 use OCP\AppFramework\Controller  ;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IRequest;
-
-;
-use OCP\ICacheFactory;
 use OCA\whiteboard\Collaboration\CollaborationEngine ;
+
 
 class CollaborationController extends Controller {
 	/**
 	 * @NoAdminRequired
 	 *
 	 **/
-	public function __construct($AppName,IRequest $request,ICacheFactory $cacheFactory, CollaborationEngine $engine) {
+	public function __construct($AppName, IRequest $request, CollaborationEngine $engine) {
 		parent::__construct($AppName, $request);
 
-		//$this->id = $request->getParam("id") ;
-	
 		$this->engine = $engine ;
 	}
 
@@ -91,7 +90,11 @@ class CollaborationController extends Controller {
 	 *
 	 **/
 	public function getSteps($id) {
-		return $this->engine->getSteps($id) ;
+		try {
+			return new DataResponse($this->engine->getSteps($id)) ;
+		} catch (DoesNotExistException $ex) {
+			return new DataResponse($ex.message,Http::STATUS_NO_CONTENT) ;
+		}
 	}
 
 	/**

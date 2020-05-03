@@ -41,16 +41,18 @@ export default {
 		this.context = context
 
 		this.init().then(function(data) {
-			// console.log('CE : Collaboration started for ' + self.appName)
 			self.addUser()
 
 			// because we may arrive in an allready running session
-			// get all steps from last last save
-			self.getSteps().then(function(steps) {
-				steps.data.forEach(step => emit(self.appName + '::externalAddStep', step))
-			})
+			// get all steps from last save
+			self.getSteps()
+				.then(function(steps) {
+					steps.data.forEach(step => emit(self.appName + '::externalAddStep', step))
+				}).catch(function(error) {
+					console.debug(error.reponse)
+				})
 
-			// get user connected to the file
+			// get users connected to the file
 			self.getUserList().then(function(users) {
 				emit(self.appName + '::usersListChanged', users)
 			})
@@ -160,25 +162,33 @@ export default {
 				})
 
 			}
+		}).catch(function(Err) {
+			if (axios.isCancel(Err)) {
+				console.debug(Err.message)
+			} else {
+				console.debug('LP Error', Err)
+			}
 		})
 	},
 
 	longPull: function() {
+		const CancelToken = axios.CancelToken
+		this.longPullCancelToken = CancelToken.source()
+
 		const url = generateUrl('apps/' + this.appName + '/collaboration/pushstep')
-		// console.log('CE : Poll again ...')
 		const ajx = axios.get(url, {
+			cancelToken: this.longPullCancelToken.token,
 			params: {
 				id: this.id,
 				user: getCurrentUser().uid,
 			},
 		})
-
 		return ajx
-
 	},
 
 	stopCommunication: function() {
 		this.communicationStarted = false
+		this.longPullCancelToken.cancel('Closing Collaborative Engine ...')
 	},
 
 }

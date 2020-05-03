@@ -20,22 +20,18 @@
  *
  */
 import { emit } from '@nextcloud/event-bus'
-import { linkTo, generateUrl } from '@nextcloud/router'
-import axios from '@nextcloud/axios'
+import { linkTo } from '@nextcloud/router'
 
 export default {
 	name: 'editor',
 
-	start: function(appName, filename, context) {
+	start: function(APP_NAME, content) {
 
 		const self = this
-
-		this.appname = appName
-		this.filename = filename
-		this.context = context
+		this.appname = APP_NAME
 
 		this.init().then(function() {
-			self.loadContent()
+			self.loadContent(content)
 			self.setupCallbacks()
 		})
 
@@ -55,42 +51,15 @@ export default {
 	},
 
 	// load whiteboard
-	loadContent: function() {
-
-		const self = this
-		const url = generateUrl('apps/' + this.appname + '/file/load')
-
-		axios.get(url, {
-			params: {
-				path: this.context.dir + '/' + this.filename,
-			},
-		}).then(function(content) {
-			// console.log("WB : loaded") ;
-			if (content.data.trim() !== '') {
-				self.whiteboard.loadSnapshot(JSON.parse(content.data))
-			}
-		})
+	loadContent: function(content) {
+		if (content.data.trim() !== '') {
+			this.whiteboard.loadSnapshot(JSON.parse(content.data))
+		}
 	},
 
 	// save whiteboard
-	saveContent: function() {
-
-		const self = this
-
-		const url = generateUrl('apps/' + this.appname + '/file/save')
-
-		axios.post(url, {
-			content: JSON.stringify(this.whiteboard.getSnapshot()),
-			path: this.context.dir + '/' + this.filename,
-		}).then(function(content) {
-			OC.Notification.showTemporary('File saved')
-			const payload = {
-				'type': 'save',
-				'step': 'NA',
-			}
-			emit(self.appname + '::editorAddStep', payload)
-		})
-
+	getSave: function() {
+		return this.whiteboard.getSnapshot()
 	},
 
 	// setup callback
