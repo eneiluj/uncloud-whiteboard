@@ -22,7 +22,7 @@ import ApplicationPrototype from './prototype.js'
 
 const APP_NAME = 'whiteboard'
 const APP_EXT = 'wbr'
-const APP_MIME = 'application/wbr'
+const APP_MIME = 'application/whiteboard'
 
 __webpack_nonce__ = btoa(OC.requestToken) 			 // eslint-disable-line
 __webpack_public_path__ = OC.linkTo(APP_NAME, 'js/') // eslint-disable-line

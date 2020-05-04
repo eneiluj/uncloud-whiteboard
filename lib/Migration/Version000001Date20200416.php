@@ -1,6 +1,6 @@
 <?php
 /**
- * @author 2019 Matthieu Le Corre <matthieu.lecorre@univ-nantes.fr>
+ * @author 2020 Matthieu Le Corre <matthieu.lecorre@univ-nantes.fr>
  *
  * @license GNU AGPL version 3 or any later version
  *

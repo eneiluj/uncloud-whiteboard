@@ -10,8 +10,9 @@
     display: block;
 }
 
+tr[data-mime='application/whiteboard'] div.thumbnail,
 .icon-whiteboard {
-    background-image: url("../img/wbr.svg");
+    background-image: url("../img/wbr.svg") !important ;
 }
 
 .icon-save {
