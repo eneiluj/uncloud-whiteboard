@@ -19,9 +19,7 @@
  *
  */
 
-namespace OCA\whiteboard\Collaboration ;
-
-use OCP\ICacheFactory;
+namespace OCA\whiteboard\Service ;
 
 use OCA\whiteboard\Db\Step ;
 use OCA\whiteboard\Db\StepMapper ;
@@ -30,73 +28,84 @@ use OCA\whiteboard\Db\User ;
 use OCA\whiteboard\Db\UserMapper ;
 
 class CollaborationEngine {
+
 	private $StepMapper ;
 	private $UserMapper ;
+	private $AppName ;
+	private $userId ;
+	private $ressourceId ;
 
-	// private $cache ;
+	public function __construct(StepMapper $StepMapper, UserMapper $UserMapper) {
 
-	public function __construct(ICacheFactory $cacheFactory, StepMapper $StepMapper, UserMapper $UserMapper) {
 		$this->StepMapper = $StepMapper ;
 		$this->UserMapper = $UserMapper ;
 
-		$this->AppName = "whiteboard";
+	}
 
-		// $this->cache = $cacheFactory->createDistributed('WhiteboardSession::'.$this->file);
+	public function setAppName(string $AppName) {
+		$this->AppName = $AppName ;
+	}
+
+	public function setUserId(string $userId) {
+		$this->userId = $userId ;
+	}
+
+	public function setRessourceId(string $ressourceId) {
+		$this->ressourceId = $ressourceId ;
 	}
 
 	//DONE
-	public function startSession(int $fileId) {
-
+	public function startSession() {
 		// nothing to setup with DB engine
 	}
 
 	//DONE
-	public function addUser(int $fileId, string $user) {
-		$usr = $this->UserMapper->find($user,$this->AppName,$fileId) ;
+	public function addUser() {
+		$usr = $this->UserMapper->find($this->userId,$this->AppName,$this->ressourceId) ;
 
 		if (! $usr) {
 			$Nuser = new User() ;
 
 			$Nuser->setAppId($this->AppName) ;
-			$Nuser->setUserId($user) ;
+			$Nuser->setUserId($this->userId) ;
 			$Nuser->setLastSeen(time()) ;
-			$Nuser->setFileId($fileId) ;
+			$Nuser->setFileId($this->ressourceId) ;
 
 			return $this->UserMapper->insert($Nuser);
 		} else {
-			$this->updateLastSeen($user,$fileId) ;
+			$this->updateLastSeen($this->userId,$this->ressourceId) ;
 			return "already there" ;
 		} ;
 	}
 
 	//DONE
-	public function removeUser(int $fileId, string $user) {
-		$usr = $this->UserMapper->find($user,$this->AppName,$fileId) ;
-		$cnt = count($this->UserMapper->findAll($this->AppName,$fileId)) ;
+	public function removeUser() {
+		$usr = $this->UserMapper->find($this->userId,$this->AppName,$this->ressourceId) ;
+		$cnt = count($this->UserMapper->findAll($this->AppName,$this->ressourceId)) ;
 
 		if ($usr) {
 			$this->UserMapper->delete($usr) ;
 		}
 
-		$cnt = count($this->UserMapper->findAll($this->AppName,$fileId)) ;
+		$cnt = count($this->UserMapper->findAll($this->AppName,$this->ressourceId)) ;
 		if ($cnt == 0) {
-			$this->StepMapper->removeAll($fileId) ;
+			$this->StepMapper->removeAll($this->ressourceId) ;
 		}
 
 		return "user removed" ;
 	}
 
 	// DONE
-	public function addStep(int $fileId,string $user, string $type, string $datas) {
-		$this->updateLastSeen($user,$fileId) ;
+	public function addStep(string $type, string $datas) {
+		$this->updateLastSeen($this->userId,$this->ressourceId) ;
 		
 		$Nstep = new Step() ;
 
 		$Nstep->setAppId($this->AppName) ;
-		$Nstep->setUserId($user) ;
+		$Nstep->setUserId($this->userId) ;
 		$Nstep->setStepId(time()) ;
-		$Nstep->setFileId($fileId) ;
-		$Nstep->setStepForwarded($user) ;
+		$Nstep->setFileId($this->ressourceId) ;
+		$Nstep->setStepForwarded($this->userId) ;
 		$Nstep->setStepType($type) ;
 		$Nstep->setStepData($datas) ;
 
@@ -104,14 +113,14 @@ class CollaborationEngine {
 	}
 	
 	// DONE
-	public function getSteps($fileId) {
-		$result =$this->StepMapper->findAll($this->AppName,$fileId) ;
+	public function getAllSteps() {
+		$result =$this->StepMapper->findAll($this->AppName,$this->ressourceId) ;
 		return $result ;
 	}
 
 	// DONE
-	public function getUserList($fileId) {
-		$users = $this->UserMapper->findAll($this->AppName,$fileId) ;
+	public function getUserList() {
+		$users = $this->UserMapper->findAll($this->AppName,$this->ressourceId) ;
 
 		foreach ($users as $user) {
 			if ($user->getLastSeen() + 60 < time()) {
@@ -122,33 +131,34 @@ class CollaborationEngine {
 	}
 
 	// DONE
-	public function waitForNewSteps(int $fileId, string $user) {
+	public function waitForNewSteps() {
 		$timeout = 20 ;
 		$elapsedTime = 0;
 
 		while (empty($steps) && $elapsedTime < $timeout) {
-			$steps = $this->StepMapper->findLasts($this->AppName,$fileId,$user) ;
+			$steps = $this->StepMapper->findLasts($this->AppName,$this->ressourceId,$this->userId) ;
 			$elapsedTime++ ;
 			if (empty($steps)) {
 				sleep(1) ;
 			}
 		} ;
 
-		$this->updateLastSeen($user,$fileId) ;
+		$this->updateLastSeen() ;
 
 		foreach ($steps as $step) {
 			$forwarded = explode(',',$step->getStepForwarded()) ;
-			$forwarded[] = $user ;
+			$forwarded[] = $this->userId ;
 			$result = implode(',',$forwarded) ;
 			$step->setStepForwarded($result) ;
 			$this->StepMapper->update($step) ;
 		} ;
+		
 		return $steps ;
 	}
 
 	// PRIVATE
-	private function updateLastSeen(string $userId, int $fileId) {
-		$usr = $this->UserMapper->find($userId,$this->AppName,$fileId) ;
+	private function updateLastSeen() {
+		$usr = $this->UserMapper->find($this->userId,$this->AppName,$this->ressourceId) ;
 		$usr->setLastSeen(time()) ;
 		$this->UserMapper->update($usr) ;
 	}

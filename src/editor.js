@@ -1,5 +1,3 @@
-/* eslint-env jquery */
-
 /**
  * @author Matthieu Le Corre <matthieu.lecorre@univ-nantes.fr>
  *
@@ -19,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 import { emit } from '@nextcloud/event-bus'
 import { linkTo } from '@nextcloud/router'
 

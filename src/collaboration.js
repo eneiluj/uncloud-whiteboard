@@ -1,5 +1,3 @@
-/* eslint-env jquery */
-
 /**
  * @author Matthieu Le Corre <matthieu.lecorre@univ-nantes.fr>
  *
@@ -45,7 +43,7 @@ export default {
 
 			// because we may arrive in an allready running session
 			// get all steps from last save
-			self.getSteps()
+			self.getAllSteps()
 				.then(function(steps) {
 					steps.data.forEach(step => emit(self.appName + '::externalAddStep', step))
 				}).catch(function(error) {
@@ -68,7 +66,6 @@ export default {
 	stop: function() {
 		this.removeUser()
 		this.stopCommunication()
-		// console.log('CE : Collaboration stopped for ' + this.appName)
 	},
 
 	init: function() {
@@ -86,12 +83,10 @@ export default {
 		const url = generateUrl('apps/' + this.appName + '/collaboration/adduser')
 		// console.log('CE : Adding user ' + OC.currentUser)
 
-		const ajx = axios.post(url, {
+		return axios.post(url, {
 			id: this.id,
-			user: getCurrentUser().uid,
 		})
 
-		return ajx
 	},
 
 	removeUser: function() {
@@ -100,29 +95,30 @@ export default {
 
 		const ajx = axios.post(url, {
 			id: this.id,
-			user: getCurrentUser().uid,
 		})
 
 		return ajx
 	},
 
 	sendStep: function(payload) {
+		const self = this
 
 		const url = generateUrl('apps/' + this.appName + '/collaboration/addstep')
 		// console.log('CE : Sending ', payload.type, ' step')
-		const ajx = axios.post(url, {
+		return axios.post(url, {
 			id: this.id,
-			user: getCurrentUser().uid,
 			type: payload.type,
 			step: JSON.stringify(payload.step),
+		}).catch((error) => {
+			console.error('Network or server error, waiting 5 sec before retry -> ', error.message)
+			setTimeout(() => { self.sendStep(payload) }, 5000)
+			return Promise.reject(error)
 		})
-
-		return ajx
 
 	},
 
-	getSteps: function() {
-		const url = generateUrl('apps/' + this.appName + '/collaboration/getsteps')
+	getAllSteps: function() {
+		const url = generateUrl('apps/' + this.appName + '/collaboration/getallsteps')
 		const ajx = axios.get(url, {
 			params: {
 				id: this.id,
@@ -162,11 +158,13 @@ export default {
 				})
 
 			}
-		}).catch(function(Err) {
-			if (axios.isCancel(Err)) {
-				console.debug(Err.message)
+		}).catch((error) => {
+			if (axios.isCancel(error)) {
+				console.debug(error.message)
+				// return Promise.reject(error.message)
 			} else {
-				console.debug('LP Error', Err)
+				console.error('Network or server error, waiting 5 sec before retry -> ', error.message)
+				setTimeout(() => { self.startCommunication() }, 5000)
 			}
 		})
 	},
@@ -175,15 +173,15 @@ export default {
 		const CancelToken = axios.CancelToken
 		this.longPullCancelToken = CancelToken.source()
 
-		const url = generateUrl('apps/' + this.appName + '/collaboration/pushstep')
-		const ajx = axios.get(url, {
+		const url = generateUrl('apps/' + this.appName + '/collaboration/getnewsteps')
+
+		return axios.get(url, {
 			cancelToken: this.longPullCancelToken.token,
 			params: {
 				id: this.id,
-				user: getCurrentUser().uid,
 			},
 		})
-		return ajx
+
 	},
 
 	stopCommunication: function() {

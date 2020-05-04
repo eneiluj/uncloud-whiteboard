@@ -68,6 +68,12 @@ export default {
 		}
 	},
 
+	destroyed: function() {
+		document.getElementById('app-content-' + this.appName).remove()
+		document.body.style.overflowY = ''
+		document.getElementById('app-navigation').classList.remove('hidden')
+	},
+
 	methods: {
 		isOffline: function(user) {
 			const now = Math.floor(Date.now() / 1000) - 30
@@ -95,14 +101,11 @@ export default {
 		},
 	},
 
-	destroyed: function() {
-		document.getElementById('app-content-' + this.appName).remove()
-		document.getElementById('app-navigation').classList.remove('hidden')
-	},
 }
 </script>
 
 <style scoped>
+
 button {
   position: relative;
   float:right ;

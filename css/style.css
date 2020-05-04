@@ -3,7 +3,7 @@
     top: 0 ;
     left:0 ;
     width: 100% ;
-    height: 100% ;
+    height: calc(100vh - 50px) ;
     background-color: white;
     z-index: 1000;
     overflow: hidden;
@@ -11,7 +11,7 @@
 }
 
 .icon-whiteboard {
-    background-image: url("../img/whiteboard.svg");
+    background-image: url("../img/wbr.svg");
 }
 
 .icon-save {

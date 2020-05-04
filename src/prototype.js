@@ -63,6 +63,7 @@ export default {
 		container.id = 'app-content-' + this.APP_NAME
 
 		document.getElementById('app-content').appendChild(container)
+		document.body.style.overflowY = 'hidden'
 		document.getElementById('app-navigation').classList.add('hidden')
 
 		Vue.prototype.t = window.t
@@ -89,7 +90,6 @@ export default {
 
 		this.vm.$mount(container)
 
-		// TODO unsubscribe !!
 		subscribe(this.APP_NAME + '::saveClick', this.SC = () => {
 			self.saveEdit()
 		})
@@ -195,7 +195,7 @@ export default {
 		unsubscribe(this.APP_NAME + '::externalAddStep', this.EAS)
 		unsubscribe(this.APP_NAME + '::usersListChanged', this.ECU)
 		unsubscribe(this.APP_NAME + '::closeClick', this.CC)
-		unsubscribe(this.APP_NAME + '::closeClick', this.SC)
+		unsubscribe(this.APP_NAME + '::saveClick', this.SC)
 
 		// stop collaboration Engine
 		this.CE.stop()

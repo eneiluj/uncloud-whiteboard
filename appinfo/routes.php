@@ -27,12 +27,12 @@ return [
 		[ 'name'=> 'collaboration#startSession', 'url' => '/collaboration/startsession','verb' => 'POST'],
 
 		[ 'name'=> 'collaboration#addStep', 'url' => '/collaboration/addstep','verb' => 'POST'],
-		[ 'name'=> 'collaboration#getSteps', 'url' => '/collaboration/getsteps','verb' => 'GET'],
+		[ 'name'=> 'collaboration#getAllSteps', 'url' => '/collaboration/getallsteps','verb' => 'GET'],
 
 		[ 'name'=> 'collaboration#addUser', 'url' => '/collaboration/adduser','verb' => 'POST'],
 		[ 'name'=> 'collaboration#removeUser', 'url' => '/collaboration/removeuser','verb' => 'POST'],
 		[ 'name'=> 'collaboration#getUserList', 'url' => '/collaboration/getuserlist','verb' => 'GET'],
 
-		[ 'name'=> 'collaboration#pushStep', 'url'=> '/collaboration/pushstep', 'verb' => 'GET']
+		[ 'name'=> 'collaboration#getNewSteps', 'url'=> '/collaboration/getnewsteps', 'verb' => 'GET']
 	]
 ];

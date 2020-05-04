@@ -26,7 +26,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IRequest;
-use OCA\whiteboard\Collaboration\CollaborationEngine ;
+use OCA\whiteboard\Service\CollaborationEngine ;
 
 
 class CollaborationController extends Controller {
@@ -34,64 +34,68 @@ class CollaborationController extends Controller {
 	 * @NoAdminRequired
 	 *
 	 **/
-	public function __construct($AppName, IRequest $request, CollaborationEngine $engine) {
+	public function __construct(string $AppName, IRequest $request, CollaborationEngine $engine, $userId) {
 		parent::__construct($AppName, $request);
 
-		$this->engine = $engine ;
+		$this->engine = $engine  ;
+
+		$this->engine->setUserId($userId) ;
+		$this->engine->setAppName($AppName) ;
+
+		$this->engine->setRessourceId($request->getParam('id')) ;
+
 	}
 
 	/**
 	 * @NoAdminRequired
 	 *
 	 **/
-	public function startSession($id) {
-		return $this->engine->startSession($id) ;
+	public function startSession() {
+		return new DataResponse($this->engine->startSession(),Http::STATUS_NO_CONTENT) ;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 *
 	 **/
-	public function addUser($id,$user) {
-		return $this->engine->addUser($id,$user) ;
+	public function addUser() {
+		return new DataResponse($this->engine->addUser()) ;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 *
 	 **/
-	public function removeUser($id,$user) {
-		return $this->engine->removeUser($id,$user) ;
+	public function removeUser() {
+		return new DataResponse($this->engine->removeUser()) ;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 *
 	 **/
-	public function getUserList($id) {
-		return $this->engine->getUserList($id) ;
+	public function getUserList() {
+		return new DataResponse($this->engine->getUserList()) ;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 *
-	 * @param int $id
-	 * @param string $user
 	 * @param string $type
 	 * @param string $step
 	 *
 	 **/
-	public function addStep(int $id,string $user,string $type, string $step) {
-		return $this->engine->addStep($id,$user,$type,$step) ;
+	public function addStep(string $type, string $step) {
+		return new DataResponse($this->engine->addStep($type,$step)) ;
 	}
 
 	/**
 	 * @NoAdminRequired
 	 *
 	 **/
-	public function getSteps($id) {
+	public function getAllSteps() {
 		try {
-			return new DataResponse($this->engine->getSteps($id)) ;
+			return new DataResponse($this->engine->getAllSteps()) ;
 		} catch (DoesNotExistException $ex) {
 			return new DataResponse($ex.message,Http::STATUS_NO_CONTENT) ;
 		}
@@ -101,7 +105,7 @@ class CollaborationController extends Controller {
 	 * @NoAdminRequired
 	 *
 	 **/
-	public function pushStep(int $id,string $user) {
-		return $this->engine->waitForNewSteps($id,$user) ;
+	public function getNewSteps() {
+		return new DataResponse($this->engine->waitForNewSteps()) ;
 	}
 }

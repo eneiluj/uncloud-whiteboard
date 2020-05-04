@@ -8,7 +8,7 @@ module.exports = {
 		path: path.resolve(__dirname, './js'),
 		publicPath: '/js/',
 		filename: 'main.js',
-        chunkFilename: 'chunks/[name]-[hash].js',
+        chunkFilename: 'chunks/[name].js',
         jsonpFunction: "webpackJsonpWhiteboard"
 	},
 	module: {
