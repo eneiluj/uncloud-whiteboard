@@ -45,6 +45,7 @@ export default {
 		this.NewFileMenu.APP_MIME = APP_MIME
 
 		this.userList = []
+		this.sessionInfo = []
 
 		OC.Plugins.register('OCA.Files.NewFileMenu', this.NewFileMenu)
 		this.registerFileActions()
@@ -73,6 +74,7 @@ export default {
 		this.vm = new Vue({
 			data: {
 				userList: this.userList,
+				ROSession: this.sessionInfo.ROSession,
 			},
 			render: h => h(
 				PrototypeView,
@@ -164,6 +166,8 @@ export default {
 		// start the collaboration Engine
 		this.CE = collaborationEngine
 		this.CE.start(this.APP_NAME, filename, context)
+
+		this.sessionInfo = this.CE.sessionInfo
 
 		// subscribtion to event bus
 		// local changes => send to Engine

@@ -27,6 +27,10 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IRequest;
 use OCA\whiteboard\Service\CollaborationEngine ;
+use OCP\Files\Folder;
+use OCP\Files\File;
+use OCP\Files\ForbiddenException;
+use OCP\Files\FileInfo;
 
 
 class CollaborationController extends Controller {
@@ -34,7 +38,7 @@ class CollaborationController extends Controller {
 	 * @NoAdminRequired
 	 *
 	 **/
-	public function __construct(string $AppName, IRequest $request, CollaborationEngine $engine, $userId) {
+	public function __construct(string $AppName, IRequest $request, CollaborationEngine $engine, Folder $userFolder, $userId) {
 		parent::__construct($AppName, $request);
 
 		$this->engine = $engine  ;
@@ -44,6 +48,15 @@ class CollaborationController extends Controller {
 
 		$this->engine->setRessourceId($request->getParam('id')) ;
 
+		/** @var File $file */
+		$file = $userFolder->getById($request->getParam('id'));
+
+		$this->engine->setUserWriteAccess($file[0]->isUpdateable());
+
+		$this->sessionInfo = [
+			"ROSession" => ! $file[0]->isUpdateable()
+		] ;
+
 	}
 
 	/**
@@ -51,7 +64,8 @@ class CollaborationController extends Controller {
 	 *
 	 **/
 	public function startSession() {
-		return new DataResponse($this->engine->startSession(),Http::STATUS_NO_CONTENT) ;
+		return new DataResponse($this->sessionInfo) ;
+		//return new DataResponse($this->engine->startSession(),Http::STATUS_NO_CONTENT) ;
 	}
 
 	/**
@@ -86,7 +100,11 @@ class CollaborationController extends Controller {
 	 *
 	 **/
 	public function addStep(string $type, string $step) {
-		return new DataResponse($this->engine->addStep($type,$step)) ;
+		try  {
+			return new DataResponse($this->engine->addStep($type,$step)) ;
+		} catch (ForbiddenException $ex) {
+			return new DataResponse($ex.message,Http::STATUS_FORBIDDEN) ;
+		}
 	}
 
 	/**

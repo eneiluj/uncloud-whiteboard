@@ -21,8 +21,8 @@
 <template>
 	<Content :id="appContent" :app-name="appName">
 		<button class="icon-close" @click="close" />
-		<button class="icon-save" @click="save" />
-		<button class="icon-menu-sidebar" @click="sidebar" />
+		<button v-if="!ROSession" class="icon-save" @click="save" />
+		<button v-if="!ROSession" class="icon-menu-sidebar" @click="sidebar" />
 		<ul v-if="userList.length > 1" class="AvatarList">
 			<li v-for="user in userList"
 				:key="userList.indexOf(user)"
@@ -33,6 +33,9 @@
 					menu-position="right" />
 			</li>
 		</ul>
+		<div v-if="ROSession" class="ro">
+			You don't have write access to this ressource, your modifications won't be forwarded and won't be saved
+		</div>
 		<AppContent :id="appEditor">
 			Loading {{ appName }} ...
 		</AppContent>
@@ -65,6 +68,7 @@ export default {
 	data: function() {
 		return {
 			userList: this.$parent.userList,
+			ROSession: this.$parent.ROSession,
 		}
 	},
 
@@ -105,36 +109,45 @@ export default {
 </script>
 
 <style scoped>
-
 button {
   position: relative;
-  float:right ;
+  float: right;
   top: 0;
   width: 30px;
   height: 30px;
-  opacity: .5;
+  opacity: 0.5;
   z-index: inherit;
-  border-width: 0px ;
+  border-width: 0;
 }
 
 button:hover {
-	opacity: 1;
+  opacity: 1;
 }
 
 .AvatarList {
-	position: relative;
-	float: right;
-	z-index: inherit;
-	padding-right: 10px;
-	margin-top: 2px ;
-	display: flex ;
+  position: relative;
+  float: right;
+  z-index: inherit;
+  padding-right: 10px;
+  margin-top: 2px;
+  display: flex;
 }
 
 .AvatarList li {
-	margin-left: 2px ;
+  margin-left: 2px;
 }
 
 .offline {
-	opacity: .4 ;
+  opacity: 0.4;
+}
+
+.ro {
+  position: relative;
+  float: right;
+  z-index: inherit;
+  padding-right: 10px;
+  margin-top: 5px;
+  display: flex;
+  color: red;
 }
 </style>

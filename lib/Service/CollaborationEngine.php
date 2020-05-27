@@ -27,12 +27,15 @@ use OCA\whiteboard\Db\StepMapper ;
 use OCA\whiteboard\Db\User ;
 use OCA\whiteboard\Db\UserMapper ;
 
+use OCP\Files\ForbiddenException;
+
 class CollaborationEngine {
 
 	private $StepMapper ;
 	private $UserMapper ;
 	private $AppName ;
 	private $userId ;
+	private $userWriteAccess ;
 	private $ressourceId ;
 
 	public function __construct(StepMapper $StepMapper, UserMapper $UserMapper) {
@@ -54,12 +57,17 @@ class CollaborationEngine {
 		$this->ressourceId = $ressourceId ;
 	}
 
-	//DONE
+	public function setUserWriteAccess(string $userWriteAccess) {
+		$this->userWriteAccess =  $userWriteAccess ;
+	}
+
+	// DONE
 	public function startSession() {
+		// for now handle by the controller
 		// nothing to setup with DB engine
 	}
 
-	//DONE
+	// DONE
 	public function addUser() {
 		$usr = $this->UserMapper->find($this->userId,$this->AppName,$this->ressourceId) ;
 
@@ -74,11 +82,11 @@ class CollaborationEngine {
 			return $this->UserMapper->insert($Nuser);
 		} else {
 			$this->updateLastSeen($this->userId,$this->ressourceId) ;
-			return "already there" ;
+			return  $usr ;
 		} ;
 	}
 
-	//DONE
+	// DONE
 	public function removeUser() {
 		$usr = $this->UserMapper->find($this->userId,$this->AppName,$this->ressourceId) ;
 		$cnt = count($this->UserMapper->findAll($this->AppName,$this->ressourceId)) ;
@@ -99,17 +107,21 @@ class CollaborationEngine {
 	public function addStep(string $type, string $datas) {
 		$this->updateLastSeen($this->userId,$this->ressourceId) ;
 		
-		$Nstep = new Step() ;
+		if ($this->setUserWriteAccess) {
+			$Nstep = new Step() ;
 
-		$Nstep->setAppId($this->AppName) ;
-		$Nstep->setUserId($this->userId) ;
-		$Nstep->setStepId(time()) ;
-		$Nstep->setFileId($this->ressourceId) ;
-		$Nstep->setStepForwarded($this->userId) ;
-		$Nstep->setStepType($type) ;
-		$Nstep->setStepData($datas) ;
+			$Nstep->setAppId($this->AppName) ;
+			$Nstep->setUserId($this->userId) ;
+			$Nstep->setStepId(time()) ;
+			$Nstep->setFileId($this->ressourceId) ;
+			$Nstep->setStepForwarded($this->userId) ;
+			$Nstep->setStepType($type) ;
+			$Nstep->setStepData($datas) ;
 
-		return $this->StepMapper->insert($Nstep);
+			return $this->StepMapper->insert($Nstep);
+		} else {
+			throw new ForbiddenException ;
+		}
 	}
 	
 	// DONE

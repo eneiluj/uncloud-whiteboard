@@ -38,8 +38,16 @@ export default {
 		this.filename = filename
 		this.context = context
 
-		this.init().then(function(data) {
+		this.init().then(function(sessionInfo) {
+
+			self.sessionInfo = sessionInfo.data
+
+			console.debug('sessionInfo', sessionInfo.data)
+
 			self.addUser()
+				.then(function(userType) {
+					console.debug('User :', userType.data)
+				})
 
 			// because we may arrive in an allready running session
 			// get all steps from last save
