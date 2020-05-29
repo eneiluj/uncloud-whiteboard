@@ -45,7 +45,7 @@ export default {
 		this.NewFileMenu.APP_MIME = APP_MIME
 
 		this.userList = []
-		this.sessionInfo = []
+		this.sessionInfo = {}
 
 		OC.Plugins.register('OCA.Files.NewFileMenu', this.NewFileMenu)
 		this.registerFileActions()
@@ -74,7 +74,7 @@ export default {
 		this.vm = new Vue({
 			data: {
 				userList: this.userList,
-				ROSession: this.sessionInfo.ROSession,
+				sessionInfo: {},
 			},
 			render: h => h(
 				PrototypeView,
@@ -153,22 +153,20 @@ export default {
 	},
 
 	// start editing
-	startEdit: function(filename, context) {
+	startEdit: async function(filename, context) {
 
 		const self = this
 
-		this.loadContent().then(function(content) {
-			// start the editor
-			self.ED = editor
-			self.ED.start(self.APP_NAME, content)
-		})
+		// get the content and start the editor
+		const content = await this.loadContent()
+		this.ED = editor
+		this.ED.start(self.APP_NAME, content)
 
 		// start the collaboration Engine
 		this.CE = collaborationEngine
-		this.CE.start(this.APP_NAME, filename, context)
 
-		this.sessionInfo = this.CE.sessionInfo
-
+		this.sessionInfo = await this.CE.start(this.APP_NAME, filename, context)
+		this.vm.sessionInfo = this.sessionInfo
 		// subscribtion to event bus
 		// local changes => send to Engine
 		subscribe(this.APP_NAME + '::editorAddStep', this.EDS = (data) => {
@@ -185,6 +183,8 @@ export default {
 			this.userList.length = 0
 			users.data.forEach(user => this.userList.push(user))
 		})
+
+		return true
 
 	},
 
@@ -226,23 +226,22 @@ export default {
 
 	// save edit
 	saveEdit: function() {
+		if (!this.sessionInfo.ROSession) {
+			const content = this.ED.getSave()
+			const self = this
+			const url = generateUrl('apps/' + this.APP_NAME + '/file/save')
 
-		const content = this.ED.getSave()
-		const self = this
-		const url = generateUrl('apps/' + this.APP_NAME + '/file/save')
-
-		axios.post(url, {
-			content: JSON.stringify(content),
-			path: this.context.dir + '/' + this.filename,
-		}).then(function() {
-			OC.Notification.showTemporary('File saved')
-			const payload = {
-				'type': 'save',
-				'step': 'NA',
-			}
-			emit(self.APP_NAME + '::editorAddStep', payload)
-		})
-
+			axios.post(url, {
+				content: JSON.stringify(content),
+				path: this.context.dir + '/' + this.filename,
+			}).then(function() {
+				OC.Notification.showTemporary('File saved')
+				const payload = {
+					'type': 'save',
+					'step': 'NA',
+				}
+				emit(self.APP_NAME + '::editorAddStep', payload)
+			})
+		}
 	},
-
 }

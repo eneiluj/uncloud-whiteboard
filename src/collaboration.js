@@ -30,7 +30,7 @@ export default {
 
 	name: 'collaborationEngine',
 
-	start: function(appName, filename, context) {
+	start: async function(appName, filename, context) {
 
 		const self = this
 
@@ -38,37 +38,37 @@ export default {
 		this.filename = filename
 		this.context = context
 
-		this.init().then(function(sessionInfo) {
+		const sessData = await this.init()
 
-			self.sessionInfo = sessionInfo.data
+		this.sessionInfo = sessData.data
 
-			console.debug('sessionInfo', sessionInfo.data)
+		console.debug('sessionInfo', this.sessionInfo)
 
-			self.addUser()
-				.then(function(userType) {
-					console.debug('User :', userType.data)
-				})
-
-			// because we may arrive in an allready running session
-			// get all steps from last save
-			self.getAllSteps()
-				.then(function(steps) {
-					steps.data.forEach(step => emit(self.appName + '::externalAddStep', step))
-				}).catch(function(error) {
-					console.debug(error.reponse)
-				})
-
-			// get users connected to the file
-			self.getUserList().then(function(users) {
-				emit(self.appName + '::usersListChanged', users)
+		this.addUser()
+			.then(function(userType) {
+				console.debug('User :', userType.data)
 			})
 
-			// start pulling for change
-			self.communicationStarted = true
-			// console.log('CE : starting communication ')
-			self.startCommunication()
+		// because we may arrive in an allready running session
+		// get all steps from last save
+		this.getAllSteps()
+			.then(function(steps) {
+				steps.data.forEach(step => emit(self.appName + '::externalAddStep', step))
+			}).catch(function(error) {
+				console.debug(error.reponse)
+			})
+
+		// get users connected to the file
+		self.getUserList().then(function(users) {
+			emit(self.appName + '::usersListChanged', users)
 		})
 
+		// start pulling for change
+		self.communicationStarted = true
+		// console.log('CE : starting communication ')
+		self.startCommunication()
+
+		return this.sessionInfo
 	},
 
 	stop: function() {
@@ -80,11 +80,9 @@ export default {
 		const url = generateUrl('apps/' + this.appName + '/collaboration/startsession')
 		this.id = window.FileList.findFile(this.filename).id
 
-		const ajx = axios.post(url, {
+		return axios.post(url, {
 			id: this.id,
 		})
-
-		return ajx
 	},
 
 	addUser: function() {
@@ -98,52 +96,59 @@ export default {
 	},
 
 	removeUser: function() {
-		const url = generateUrl('apps/' + this.appName + '/collaboration/removeuser')
-		// console.log('CE : Removing user ' + OC.currentUser)
 
-		const ajx = axios.post(url, {
+		const url = generateUrl('apps/' + this.appName + '/collaboration/removeuser')
+
+		return axios.post(url, {
 			id: this.id,
 		})
 
-		return ajx
 	},
 
 	sendStep: function(payload) {
-		const self = this
+		if (!this.sessionInfo.ROSession) {
+			const self = this
+			const url = generateUrl('apps/' + this.appName + '/collaboration/addstep')
 
-		const url = generateUrl('apps/' + this.appName + '/collaboration/addstep')
-		// console.log('CE : Sending ', payload.type, ' step')
-		return axios.post(url, {
-			id: this.id,
-			type: payload.type,
-			step: JSON.stringify(payload.step),
-		}).catch((error) => {
-			console.error('Network or server error, waiting 5 sec before retry -> ', error.message)
-			setTimeout(() => { self.sendStep(payload) }, 5000)
-			return Promise.reject(error)
-		})
-
+			return axios.post(url, {
+				id: this.id,
+				type: payload.type,
+				step: JSON.stringify(payload.step),
+			}).catch((error) => {
+				if (error.response.status === 403) {
+					console.debug('RO Session, updating is not permitted')
+					return true
+				} else {
+					if (self.communicationStarted === true) {
+						console.error('Network or server error, waiting 5 sec before retry -> ', error.reponse.status)
+						setTimeout(() => { self.sendStep(payload) }, 5000)
+						return true
+					}
+				}
+			})
+		}
 	},
 
 	getAllSteps: function() {
+
 		const url = generateUrl('apps/' + this.appName + '/collaboration/getallsteps')
-		const ajx = axios.get(url, {
+
+		return axios.get(url, {
 			params: {
 				id: this.id,
 			},
 		})
-
-		return ajx
 	},
 
 	getUserList: function() {
+
 		const url = generateUrl('apps/' + this.appName + '/collaboration/getuserlist')
-		const ajx = axios.get(url, {
+
+		return axios.get(url, {
 			params: {
 				id: this.id,
 			},
 		})
-		return ajx
 	},
 
 	startCommunication: function() {

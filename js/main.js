@@ -18095,9 +18095,14 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function () {
     return {
-      userList: this.$parent.userList,
-      ROSession: this.$parent.ROSession
+      userList: this.$parent.userList // sessionInfoRO: this.$parent.sessionInfo.ROSession,
+
     };
+  },
+  computed: {
+    ROSession: function () {
+      return this.$parent.sessionInfo.ROSession;
+    }
   },
   destroyed: function () {
     document.getElementById('app-content-' + this.appName).remove();
@@ -30401,7 +30406,7 @@ var render = function() {
           )
         : _vm._e(),
       _vm._v(" "),
-      _vm.ROSession
+      _vm.ROSession == true
         ? _c("div", { staticClass: "ro" }, [
             _vm._v(
               "\n\t\tYou don't have write access to this ressource, your modifications won't be forwarded and won't be saved\n\t"
@@ -39576,33 +39581,33 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'collaborationEngine',
-  start: function (appName, filename, context) {
+  start: async function (appName, filename, context) {
     const self = this;
     this.appName = appName;
     this.filename = filename;
     this.context = context;
-    this.init().then(function (sessionInfo) {
-      self.sessionInfo = sessionInfo.data;
-      console.debug('sessionInfo', sessionInfo.data);
-      self.addUser().then(function (userType) {
-        console.debug('User :', userType.data);
-      }); // because we may arrive in an allready running session
-      // get all steps from last save
+    const sessData = await this.init();
+    this.sessionInfo = sessData.data;
+    console.debug('sessionInfo', this.sessionInfo);
+    this.addUser().then(function (userType) {
+      console.debug('User :', userType.data);
+    }); // because we may arrive in an allready running session
+    // get all steps from last save
 
-      self.getAllSteps().then(function (steps) {
-        steps.data.forEach(step => Object(_nextcloud_event_bus__WEBPACK_IMPORTED_MODULE_0__["emit"])(self.appName + '::externalAddStep', step));
-      }).catch(function (error) {
-        console.debug(error.reponse);
-      }); // get users connected to the file
+    this.getAllSteps().then(function (steps) {
+      steps.data.forEach(step => Object(_nextcloud_event_bus__WEBPACK_IMPORTED_MODULE_0__["emit"])(self.appName + '::externalAddStep', step));
+    }).catch(function (error) {
+      console.debug(error.reponse);
+    }); // get users connected to the file
 
-      self.getUserList().then(function (users) {
-        Object(_nextcloud_event_bus__WEBPACK_IMPORTED_MODULE_0__["emit"])(self.appName + '::usersListChanged', users);
-      }); // start pulling for change
+    self.getUserList().then(function (users) {
+      Object(_nextcloud_event_bus__WEBPACK_IMPORTED_MODULE_0__["emit"])(self.appName + '::usersListChanged', users);
+    }); // start pulling for change
 
-      self.communicationStarted = true; // console.log('CE : starting communication ')
+    self.communicationStarted = true; // console.log('CE : starting communication ')
 
-      self.startCommunication();
-    });
+    self.startCommunication();
+    return this.sessionInfo;
   },
   stop: function () {
     this.removeUser();
@@ -39611,10 +39616,9 @@ __webpack_require__.r(__webpack_exports__);
   init: function () {
     const url = Object(_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__["generateUrl"])('apps/' + this.appName + '/collaboration/startsession');
     this.id = window.FileList.findFile(this.filename).id;
-    const ajx = _nextcloud_axios__WEBPACK_IMPORTED_MODULE_3___default.a.post(url, {
+    return _nextcloud_axios__WEBPACK_IMPORTED_MODULE_3___default.a.post(url, {
       id: this.id
     });
-    return ajx;
   },
   addUser: function () {
     const url = Object(_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__["generateUrl"])('apps/' + this.appName + '/collaboration/adduser'); // console.log('CE : Adding user ' + OC.currentUser)
@@ -39624,46 +39628,50 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   removeUser: function () {
-    const url = Object(_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__["generateUrl"])('apps/' + this.appName + '/collaboration/removeuser'); // console.log('CE : Removing user ' + OC.currentUser)
-
-    const ajx = _nextcloud_axios__WEBPACK_IMPORTED_MODULE_3___default.a.post(url, {
+    const url = Object(_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__["generateUrl"])('apps/' + this.appName + '/collaboration/removeuser');
+    return _nextcloud_axios__WEBPACK_IMPORTED_MODULE_3___default.a.post(url, {
       id: this.id
     });
-    return ajx;
   },
   sendStep: function (payload) {
-    const self = this;
-    const url = Object(_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__["generateUrl"])('apps/' + this.appName + '/collaboration/addstep'); // console.log('CE : Sending ', payload.type, ' step')
-
-    return _nextcloud_axios__WEBPACK_IMPORTED_MODULE_3___default.a.post(url, {
-      id: this.id,
-      type: payload.type,
-      step: JSON.stringify(payload.step)
-    }).catch(error => {
-      console.error('Network or server error, waiting 5 sec before retry -> ', error.message);
-      setTimeout(() => {
-        self.sendStep(payload);
-      }, 5000);
-      return Promise.reject(error);
-    });
+    if (!this.sessionInfo.ROSession) {
+      const self = this;
+      const url = Object(_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__["generateUrl"])('apps/' + this.appName + '/collaboration/addstep');
+      return _nextcloud_axios__WEBPACK_IMPORTED_MODULE_3___default.a.post(url, {
+        id: this.id,
+        type: payload.type,
+        step: JSON.stringify(payload.step)
+      }).catch(error => {
+        if (error.response.status === 403) {
+          console.debug('RO Session, updating is not permitted');
+          return true;
+        } else {
+          if (self.communicationStarted === true) {
+            console.error('Network or server error, waiting 5 sec before retry -> ', error.reponse.status);
+            setTimeout(() => {
+              self.sendStep(payload);
+            }, 5000);
+            return true;
+          }
+        }
+      });
+    }
   },
   getAllSteps: function () {
     const url = Object(_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__["generateUrl"])('apps/' + this.appName + '/collaboration/getallsteps');
-    const ajx = _nextcloud_axios__WEBPACK_IMPORTED_MODULE_3___default.a.get(url, {
+    return _nextcloud_axios__WEBPACK_IMPORTED_MODULE_3___default.a.get(url, {
       params: {
         id: this.id
       }
     });
-    return ajx;
   },
   getUserList: function () {
     const url = Object(_nextcloud_router__WEBPACK_IMPORTED_MODULE_1__["generateUrl"])('apps/' + this.appName + '/collaboration/getuserlist');
-    const ajx = _nextcloud_axios__WEBPACK_IMPORTED_MODULE_3___default.a.get(url, {
+    return _nextcloud_axios__WEBPACK_IMPORTED_MODULE_3___default.a.get(url, {
       params: {
         id: this.id
       }
     });
-    return ajx;
   },
   startCommunication: function () {
     const self = this;
@@ -39938,7 +39946,7 @@ __webpack_require__.r(__webpack_exports__);
     this.NewFileMenu.APP_EXT = APP_EXT;
     this.NewFileMenu.APP_MIME = APP_MIME;
     this.userList = [];
-    this.sessionInfo = [];
+    this.sessionInfo = {};
     OC.Plugins.register('OCA.Files.NewFileMenu', this.NewFileMenu);
     this.registerFileActions();
   },
@@ -39958,7 +39966,7 @@ __webpack_require__.r(__webpack_exports__);
     this.vm = new vue__WEBPACK_IMPORTED_MODULE_5__["default"]({
       data: {
         userList: this.userList,
-        ROSession: this.sessionInfo.ROSession
+        sessionInfo: {}
       },
       render: h => h(_PrototypeView__WEBPACK_IMPORTED_MODULE_6__["default"], {
         props: {
@@ -40020,17 +40028,16 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   // start editing
-  startEdit: function (filename, context) {
-    const self = this;
-    this.loadContent().then(function (content) {
-      // start the editor
-      self.ED = _editor_js__WEBPACK_IMPORTED_MODULE_0__["default"];
-      self.ED.start(self.APP_NAME, content);
-    }); // start the collaboration Engine
+  startEdit: async function (filename, context) {
+    const self = this; // get the content and start the editor
+
+    const content = await this.loadContent();
+    this.ED = _editor_js__WEBPACK_IMPORTED_MODULE_0__["default"];
+    this.ED.start(self.APP_NAME, content); // start the collaboration Engine
 
     this.CE = _collaboration_js__WEBPACK_IMPORTED_MODULE_1__["default"];
-    this.CE.start(this.APP_NAME, filename, context);
-    this.sessionInfo = this.CE.sessionInfo; // subscribtion to event bus
+    this.sessionInfo = await this.CE.start(this.APP_NAME, filename, context);
+    this.vm.sessionInfo = this.sessionInfo; // subscribtion to event bus
     // local changes => send to Engine
 
     Object(_nextcloud_event_bus__WEBPACK_IMPORTED_MODULE_2__["subscribe"])(this.APP_NAME + '::editorAddStep', this.EDS = data => {
@@ -40045,6 +40052,7 @@ __webpack_require__.r(__webpack_exports__);
       this.userList.length = 0;
       users.data.forEach(user => this.userList.push(user));
     });
+    return true;
   },
   // stop editing
   stopEdit: function () {
@@ -40075,20 +40083,22 @@ __webpack_require__.r(__webpack_exports__);
   },
   // save edit
   saveEdit: function () {
-    const content = this.ED.getSave();
-    const self = this;
-    const url = Object(_nextcloud_router__WEBPACK_IMPORTED_MODULE_3__["generateUrl"])('apps/' + this.APP_NAME + '/file/save');
-    _nextcloud_axios__WEBPACK_IMPORTED_MODULE_4___default.a.post(url, {
-      content: JSON.stringify(content),
-      path: this.context.dir + '/' + this.filename
-    }).then(function () {
-      OC.Notification.showTemporary('File saved');
-      const payload = {
-        'type': 'save',
-        'step': 'NA'
-      };
-      Object(_nextcloud_event_bus__WEBPACK_IMPORTED_MODULE_2__["emit"])(self.APP_NAME + '::editorAddStep', payload);
-    });
+    if (!this.sessionInfo.ROSession) {
+      const content = this.ED.getSave();
+      const self = this;
+      const url = Object(_nextcloud_router__WEBPACK_IMPORTED_MODULE_3__["generateUrl"])('apps/' + this.APP_NAME + '/file/save');
+      _nextcloud_axios__WEBPACK_IMPORTED_MODULE_4___default.a.post(url, {
+        content: JSON.stringify(content),
+        path: this.context.dir + '/' + this.filename
+      }).then(function () {
+        OC.Notification.showTemporary('File saved');
+        const payload = {
+          'type': 'save',
+          'step': 'NA'
+        };
+        Object(_nextcloud_event_bus__WEBPACK_IMPORTED_MODULE_2__["emit"])(self.APP_NAME + '::editorAddStep', payload);
+      });
+    }
   }
 });
 

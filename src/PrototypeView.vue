@@ -33,7 +33,7 @@
 					menu-position="right" />
 			</li>
 		</ul>
-		<div v-if="ROSession" class="ro">
+		<div v-if="ROSession == true" class="ro">
 			You don't have write access to this ressource, your modifications won't be forwarded and won't be saved
 		</div>
 		<AppContent :id="appEditor">
@@ -68,8 +68,14 @@ export default {
 	data: function() {
 		return {
 			userList: this.$parent.userList,
-			ROSession: this.$parent.ROSession,
+			// sessionInfoRO: this.$parent.sessionInfo.ROSession,
 		}
+	},
+
+	computed: {
+		ROSession: function() {
+			return this.$parent.sessionInfo.ROSession
+		},
 	},
 
 	destroyed: function() {

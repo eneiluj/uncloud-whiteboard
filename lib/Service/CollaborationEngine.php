@@ -107,7 +107,7 @@ class CollaborationEngine {
 	public function addStep(string $type, string $datas) {
 		$this->updateLastSeen($this->userId,$this->ressourceId) ;
 		
-		if ($this->setUserWriteAccess) {
+		if ($this->userWriteAccess) {
 			$Nstep = new Step() ;
 
 			$Nstep->setAppId($this->AppName) ;
@@ -120,7 +120,8 @@ class CollaborationEngine {
 
 			return $this->StepMapper->insert($Nstep);
 		} else {
-			throw new ForbiddenException ;
+			throw new ForbiddenException("RO Session",FALSE) ;
+			//BUG !!
 		}
 	}
 	
