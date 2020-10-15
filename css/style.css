@@ -1,6 +1,6 @@
 #app-content-whiteboard {
-    position: absolute;
-    top: 0 ;
+    position: fixed;
+    top: 50px ;
     left:0 ;
     width: 100% ;
     height: calc(100vh - 50px) ;
