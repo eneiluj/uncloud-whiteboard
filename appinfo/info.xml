@@ -4,7 +4,7 @@
     <name>Whiteboard</name>
     <summary>A collaborative white board</summary>
     <description><![CDATA[ A collaborative white board ]]></description>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <licence>agpl</licence>
     <author mail="matthieu.lecorre@univ-nantes.fr" homepage="http://www.univ-nantes.fr">Matthieu Le Corre</author>
     <namespace>whiteboard</namespace>
@@ -14,7 +14,7 @@
     <bugs>https://gitlab.univ-nantes.fr/uncloud/whiteboard/issues</bugs>
     <screenshot>https://gitlab.univ-nantes.fr/uncloud/whiteboard/raw/master/screenshot.png</screenshot>
     <dependencies>	    
-        <nextcloud min-version="18" max-version="18"/>
+        <nextcloud min-version="18" max-version="20"/>
     </dependencies>
     <repair-steps>
         <install>
