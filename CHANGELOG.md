@@ -1,8 +1,8 @@
-## 0.0.3 15/10/2020
+## 0.0.3 16/10/2020
 ### Fixed
 - Incorrect CSS value (thanks to kmeado for fixing)
  [#10](https://gitlab.univ-nantes.fr/uncloud/whiteboard/issues/10)
- [#44](https://gitlab.univ-nantes.fr/uncloud/whiteboard/issues/6)
+ [#6](https://gitlab.univ-nantes.fr/uncloud/whiteboard/issues/6)
 ### Added
 - Nextcloud 19 & 20 compatibility check
 
