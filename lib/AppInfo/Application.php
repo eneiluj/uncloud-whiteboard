@@ -37,7 +37,7 @@ class Application extends App {
 	protected function addPrivateListeners($eventDispatcher) {
 		$eventDispatcher->addListener('OCA\Files::loadAdditionalScripts',
 			function () {
-				\OCP\Util::addscript('whiteboard', 'main');
+				\OCP\Util::addscript('whiteboard', 'whiteboard-main');
 				\OCP\Util::addStyle('whiteboard','style') ;
 				\OCP\Util::addStyle('whiteboard','literallycanvas') ;
 			});

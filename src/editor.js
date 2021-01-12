@@ -20,49 +20,45 @@
 
 import { emit } from '@nextcloud/event-bus'
 import { linkTo } from '@nextcloud/router'
+import LC from 'literallycanvas'
 
 export default {
 	name: 'editor',
 
-	start: function(APP_NAME, content) {
+	start(APP_NAME, content) {
 
-		const self = this
 		this.appname = APP_NAME
 
-		this.init().then(function() {
-			self.loadContent(content)
-			self.setupCallbacks()
-		})
-
+		this.init()
+		this.loadContent(content)
+		this.setupCallbacks()
 	},
 
-	init: function() {
-		return import(/* webpackChunkName: "literallycanvas" */ 'literallycanvas').then(LC => {
-			this.LC = LC
-			this.whiteboard = LC.init(
-				document.getElementById(this.appname + '-editor'),
-				{
-					imageURLPrefix: linkTo(this.appname, 'img/lc_assets'),
-					toolbarPosition: 'top',
-				}
-			)
-		})
+	init() {
+		this.LC = LC
+		this.whiteboard = LC.init(
+			document.getElementById(this.appname + '-editor'),
+			{
+				imageURLPrefix: linkTo(this.appname, 'img/lc_assets'),
+				toolbarPosition: 'top',
+			}
+		)
 	},
 
 	// load whiteboard
-	loadContent: function(content) {
+	loadContent(content) {
 		if (content.data.trim() !== '') {
 			this.whiteboard.loadSnapshot(JSON.parse(content.data))
 		}
 	},
 
 	// save whiteboard
-	getSave: function() {
+	getSave() {
 		return this.whiteboard.getSnapshot()
 	},
 
 	// setup callback
-	setupCallbacks: function() {
+	setupCallbacks() {
 		const self = this
 
 		// set save callback
@@ -75,8 +71,8 @@ export default {
 
 		this.whiteboard.on('shapeSave', function(data) {
 			const payload = {
-				'type': 'shapeSave',
-				'step': self.LC.shapeToJSON(data.shape),
+				type: 'shapeSave',
+				step: self.LC.shapeToJSON(data.shape),
 			}
 			emit(self.appname + '::editorAddStep', payload)
 			return data
@@ -96,11 +92,11 @@ export default {
 	},
 
 	// destroy editor
-	stop: function() {
+	stop() {
 		this.whiteboard.teardown()
 	},
 
-	applyChange: function(step) {
+	applyChange(step) {
 		switch (step.stepType) {
 		case 'shapeSave':
 			const shapeStep = this.LC.JSONToShape(JSON.parse(step.stepData)) // eslint-disable-line
@@ -118,5 +114,4 @@ export default {
 		default: console.warn('ED : Unknown step type')
 		}
 	},
-
 }

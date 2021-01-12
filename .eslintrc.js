@@ -1,6 +1,8 @@
 module.exports = {
+	globals: {
+		appVersion: true
+	},
 	extends: [
-		'@nextcloud',
-		"plugin:nextcloud/recommended"
-	],
+		'@nextcloud'
+	]
 }

@@ -101,28 +101,6 @@ export default {
 
 	},
 
-	// register file handler
-	registerFileActions: function() {
-
-		const self = this
-
-		OCA.Files.fileActions.registerAction({
-			name: 'Edit',
-			mime: this.APP_MIME,
-			permissions: OC.PERMISSION_READ,
-			icon: function() {
-				return imagePath('core', 'actions/edit')
-			},
-			actionHandler: function(filename, context) {
-				self.setupContainer(filename, context)
-				self.startEdit(filename, context)
-			},
-		})
-
-		OCA.Files.fileActions.setDefault(this.APP_MIME, 'Edit')
-
-	},
-
 	// register "New" in file app
 	NewFileMenu: {
 

@@ -1,9 +1,11 @@
 #app-content-whiteboard {
-    position: fixed;
+    position: absolute;
     top: 50px ;
     left:0 ;
     width: 100% ;
-    height: calc(100vh - 50px) ;
+    height: calc(100vh - 50px);
+    min-height: 0px;
+    padding-top: 0;
     background-color: white;
     z-index: 1000;
     overflow: hidden;

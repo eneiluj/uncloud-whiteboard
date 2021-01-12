@@ -30,13 +30,14 @@ export default {
 
 	name: 'collaborationEngine',
 
-	start: async function(appName, filename, context) {
+	async start(appName, filename, fileId) {
 
 		const self = this
 
 		this.appName = appName
 		this.filename = filename
-		this.context = context
+		this.id = fileId
+		// this.context = context
 
 		const sessData = await this.init()
 
@@ -71,21 +72,24 @@ export default {
 		return this.sessionInfo
 	},
 
-	stop: function() {
+	stop() {
 		this.removeUser()
 		this.stopCommunication()
 	},
 
-	init: function() {
+	init() {
 		const url = generateUrl('apps/' + this.appName + '/collaboration/startsession')
-		this.id = window.FileList.findFile(this.filename).id
+		console.debug('FILE ID')
+		console.debug(this.id)
+		// this.id = fileId
+		// this.id = window.FileList.findFile('awwww.wbr').id
 
 		return axios.post(url, {
 			id: this.id,
 		})
 	},
 
-	addUser: function() {
+	addUser() {
 		const url = generateUrl('apps/' + this.appName + '/collaboration/adduser')
 		// console.log('CE : Adding user ' + OC.currentUser)
 
@@ -95,7 +99,7 @@ export default {
 
 	},
 
-	removeUser: function() {
+	removeUser() {
 
 		const url = generateUrl('apps/' + this.appName + '/collaboration/removeuser')
 
@@ -105,7 +109,7 @@ export default {
 
 	},
 
-	sendStep: function(payload) {
+	sendStep(payload) {
 		if (!this.sessionInfo.ROSession) {
 			const self = this
 			const url = generateUrl('apps/' + this.appName + '/collaboration/addstep')
@@ -129,7 +133,7 @@ export default {
 		}
 	},
 
-	getAllSteps: function() {
+	getAllSteps() {
 
 		const url = generateUrl('apps/' + this.appName + '/collaboration/getallsteps')
 
@@ -140,7 +144,7 @@ export default {
 		})
 	},
 
-	getUserList: function() {
+	getUserList() {
 
 		const url = generateUrl('apps/' + this.appName + '/collaboration/getuserlist')
 
@@ -151,7 +155,7 @@ export default {
 		})
 	},
 
-	startCommunication: function() {
+	startCommunication() {
 		const self = this
 
 		this.longPull().then(function(reponse) {
@@ -182,7 +186,7 @@ export default {
 		})
 	},
 
-	longPull: function() {
+	longPull() {
 		const CancelToken = axios.CancelToken
 		this.longPullCancelToken = CancelToken.source()
 
@@ -197,7 +201,7 @@ export default {
 
 	},
 
-	stopCommunication: function() {
+	stopCommunication() {
 		this.communicationStarted = false
 		this.longPullCancelToken.cancel('Closing Collaborative Engine ...')
 	},
