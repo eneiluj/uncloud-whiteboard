@@ -11,7 +11,8 @@ webpackConfig.stats = {
 }
 
 webpackConfig.entry = {
-    main: { import: path.join(__dirname, 'src', 'main.js'), filename: 'whiteboard-main.js' },
+    viewer: { import: path.join(__dirname, 'src', 'viewer.js'), filename: 'whiteboard-viewer.js' },
+    filetypes: { import: path.join(__dirname, 'src', 'filetypes.js'), filename: 'whiteboard-filetypes.js' },
 }
 
 module.exports = webpackConfig

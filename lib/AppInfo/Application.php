@@ -19,13 +19,20 @@
  *
  */
 
-namespace OCA\whiteboard\Appinfo ;
+namespace OCA\whiteboard\Appinfo;
+
+use OCP\Util;
+use OCA\Files\Event\LoadAdditionalScriptsEvent;
+use OCA\Viewer\Event\LoadViewer;
 
 use OCP\AppFramework\App;
 
 class Application extends App {
+
+	public const APP_ID = 'whiteboard';
+
 	public function __construct(array $urlParams = []) {
-		parent::__construct('whiteboard', $urlParams);
+		parent::__construct(self::APP_ID, $urlParams);
 
 		$container = $this->getContainer() ;
 		$server = $container->getServer() ;
@@ -35,11 +42,15 @@ class Application extends App {
 	}
 
 	protected function addPrivateListeners($eventDispatcher) {
-		$eventDispatcher->addListener('OCA\Files::loadAdditionalScripts',
-			function () {
-				\OCP\Util::addscript('whiteboard', 'whiteboard-main');
-				\OCP\Util::addStyle('whiteboard','style') ;
-				\OCP\Util::addStyle('whiteboard','literallycanvas') ;
-			});
+		$eventDispatcher->addListener(LoadAdditionalScriptsEvent::class, function () {
+			Util::addscript(self::APP_ID, self::APP_ID . '-filetypes');
+			Util::addStyle(self::APP_ID,'style') ;
+			Util::addStyle(self::APP_ID,'literallycanvas') ;
+        });
+        $eventDispatcher->addListener(LoadViewer::class, function () {
+            Util::addscript(self::APP_ID, self::APP_ID . '-viewer');
+			Util::addStyle(self::APP_ID,'style') ;
+			Util::addStyle(self::APP_ID,'literallycanvas') ;
+        });
 	}
 }
