@@ -48,13 +48,11 @@ export default {
 		this.sessionInfo = {}
 
 		OC.Plugins.register('OCA.Files.NewFileMenu', this.NewFileMenu)
-		this.registerFileActions()
 
 	},
 
 	// create container + handle close button
 	setupContainer(filename, fileid, dir) {
-
 		this.filename = filename
 		this.fileid = fileid
 		this.dir = dir
@@ -63,9 +61,12 @@ export default {
 		const container = document.createElement('div')
 		container.id = 'app-content-' + this.APP_NAME
 
+		console.debug('setupContainer')
 		document.getElementById('app-content').appendChild(container)
+		console.debug('setupContainer 22222222222')
 		document.body.style.overflowY = 'hidden'
-		document.getElementById('app-navigation').classList.add('hidden')
+		document.getElementById('app-navigation')?.classList.add('hidden')
+		console.debug('setupContainer 33333')
 
 		Vue.prototype.t = window.t
 		Vue.prototype.n = window.n
@@ -99,7 +100,6 @@ export default {
 		subscribe(this.APP_NAME + '::closeClick', this.CC = () => {
 			this.stopEdit()
 		})
-
 	},
 
 	registerFileActions() {

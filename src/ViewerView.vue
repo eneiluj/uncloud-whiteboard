@@ -64,6 +64,11 @@ export default {
 			console.debug('MOUNTED, done loading')
 			this.doneLoading()
 		}
+
+		const sidebarButtons = document.getElementsByClassName('icon-menu-sidebar-white-forced')
+		if (sidebarButtons.length > 0) {
+			sidebarButtons[0].click()
+		}
 	},
 
 	methods: {

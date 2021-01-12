@@ -23,6 +23,7 @@ namespace OCA\whiteboard\Appinfo;
 
 use OCP\Util;
 use OCA\Files\Event\LoadAdditionalScriptsEvent;
+use OCA\Files_Sharing\Event\BeforeTemplateRenderedEvent;
 use OCA\Viewer\Event\LoadViewer;
 
 use OCP\AppFramework\App;
@@ -43,14 +44,21 @@ class Application extends App {
 
 	protected function addPrivateListeners($eventDispatcher) {
 		$eventDispatcher->addListener(LoadAdditionalScriptsEvent::class, function () {
-			Util::addscript(self::APP_ID, self::APP_ID . '-filetypes');
-			Util::addStyle(self::APP_ID,'style') ;
-			Util::addStyle(self::APP_ID,'literallycanvas') ;
+            $this->loadFilesScripts();
+		});
+		$eventDispatcher->addListener(BeforeTemplateRenderedEvent::class, function () {
+            $this->loadFilesScripts();
         });
         $eventDispatcher->addListener(LoadViewer::class, function () {
             Util::addscript(self::APP_ID, self::APP_ID . '-viewer');
 			Util::addStyle(self::APP_ID,'style') ;
 			Util::addStyle(self::APP_ID,'literallycanvas') ;
         });
+	}
+
+	private function loadFilesScripts() {
+		Util::addscript(self::APP_ID, self::APP_ID . '-filetypes');
+		Util::addStyle(self::APP_ID,'style') ;
+		Util::addStyle(self::APP_ID,'literallycanvas') ;
 	}
 }
