@@ -61,12 +61,9 @@ export default {
 		const container = document.createElement('div')
 		container.id = 'app-content-' + this.APP_NAME
 
-		console.debug('setupContainer')
 		document.getElementById('app-content').appendChild(container)
-		console.debug('setupContainer 22222222222')
 		document.body.style.overflowY = 'hidden'
 		document.getElementById('app-navigation')?.classList.add('hidden')
-		console.debug('setupContainer 33333')
 
 		Vue.prototype.t = window.t
 		Vue.prototype.n = window.n

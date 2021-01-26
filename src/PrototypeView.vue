@@ -65,7 +65,6 @@ export default {
 
 	computed: {
 		ROSession() {
-			console.debug('!!!!!!!!!!!!!!!!!!!!!!!!!!!!§LALALALALALALAALAL')
 			return this.$parent.sessionInfo.ROSession
 		},
 	},

@@ -19,10 +19,8 @@
  */
 
 import ViewerView from './ViewerView'
-// import PrototypeView from './PrototypeView'
 
 const APP_NAME = 'whiteboard'
-// const APP_EXT = 'wbr'
 const APP_MIME = 'application/whiteboard'
 
 __webpack_nonce__ = btoa(OC.requestToken) 			 // eslint-disable-line
@@ -30,19 +28,13 @@ __webpack_public_path__ = OC.linkTo(APP_NAME, 'js/') // eslint-disable-line
 
 document.addEventListener('DOMContentLoaded', () => {
 
-	console.debug('PrototypeView')
-	// console.debug(PrototypeView)
-	console.debug('ViewerView')
-	console.debug(ViewerView)
-	// OCA.whiteboard.initialise(APP_NAME, APP_EXT, APP_MIME)
 	OCA.Viewer.registerHandler({
-		id: 'whwh',
+		id: 'wbrWhiteboard',
 		group: null,
 		mimes: [
 			APP_MIME,
 		],
 		component: ViewerView,
 	})
-	console.debug('WBWBWBWB REGISTERED')
 
 })

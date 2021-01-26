@@ -37,7 +37,6 @@ export default {
 		this.appName = appName
 		this.filename = filename
 		this.id = fileId
-		// this.context = context
 
 		const sessData = await this.init()
 
@@ -79,10 +78,6 @@ export default {
 
 	init() {
 		const url = generateUrl('apps/' + this.appName + '/collaboration/startsession')
-		console.debug('FILE ID')
-		console.debug(this.id)
-		// this.id = fileId
-		// this.id = window.FileList.findFile('awwww.wbr').id
 
 		return axios.post(url, {
 			id: this.id,

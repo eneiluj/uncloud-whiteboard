@@ -44,16 +44,16 @@ class Application extends App {
 
 	protected function addPrivateListeners($eventDispatcher) {
 		$eventDispatcher->addListener(LoadAdditionalScriptsEvent::class, function () {
-            $this->loadFilesScripts();
+			$this->loadFilesScripts();
 		});
 		$eventDispatcher->addListener(BeforeTemplateRenderedEvent::class, function () {
-            $this->loadFilesScripts();
-        });
-        $eventDispatcher->addListener(LoadViewer::class, function () {
-            Util::addscript(self::APP_ID, self::APP_ID . '-viewer');
+			$this->loadFilesScripts();
+		});
+		$eventDispatcher->addListener(LoadViewer::class, function () {
+			Util::addscript(self::APP_ID, self::APP_ID . '-viewer');
 			Util::addStyle(self::APP_ID,'style') ;
 			Util::addStyle(self::APP_ID,'literallycanvas') ;
-        });
+		});
 	}
 
 	private function loadFilesScripts() {
